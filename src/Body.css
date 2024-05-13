@@ -1,0 +1,8 @@
+body {
+    background: linear-gradient(to bottom, #6c3074, #4a148c); /* Фиолетовый градиент от #6c3074 до #4a148c */
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Занимает 100% высоты видимой области страницы */
+    font-family: Arial, sans-serif; /* Пример шрифта для текста на странице */
+    color: #ffffff; /* Белый цвет текста */
+}
