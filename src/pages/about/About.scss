@@ -1,0 +1,17 @@
+.about {
+  background:  linear-gradient(50deg, #e371aa, #5050e6);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  width: 80%;
+}
+
+.small-image {
+  width: 100px;
+  height: 100px;
+}
+
+.ul-about {
+  list-style-type: none;
+}

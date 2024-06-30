@@ -1,0 +1,57 @@
+.container-video {
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  width: 80%;
+  /* overflow: hidden; */
+}
+
+.playerContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5em;
+  border-radius: 1em;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.videoPlayer {
+  border-radius: 1em;
+  width: 80%;
+  height: 600px;
+  z-index: 0;
+
+}
+
+.controlsContainer {
+  margin-top: 1em;
+}
+
+.controls {
+  display: flex;
+  z-index: 5;
+  color: white;
+  width: 200px;
+  justify-content: space-between;
+}
+
+.controlButton {
+  border: none;
+  background: none;
+}
+
+.timeline {
+  width: 100%;
+}
+
+.duration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.controlButton:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,32 @@
+.logo{
+    margin:  0 1em;
+}
+
+.header {
+    grid-area: header;
+    //background-color: #f8f9fa;
+    padding: 0.1rem;
+    height: 4rem   ;
+    text-align: center;
+
+    display: flex;
+    align-items: center; /* Выравнивание по вертикали */
+    justify-content: space-between; /* Равномерное распределение по горизонтали */
+
+    background-color: #333;
+    color: white;
+
+}
+
+.header-top {
+    display: grid;
+    grid-template-columns: 0.25fr 6fr 0.5fr; /* Три колонки: первая и третья - по 1fr, вторая - по 2fr */
+    align-items: center; /* Выравнивание по вертикали */
+    padding: 10px 20px; /* Примерные отступы, которые можно настроить под свои нужды */
+    background:  linear-gradient(100deg, #402, #006);
+    color: white;
+}
+
+.logo-container {
+    grid-column: 1 / 2; /* Размещение логотипа в первой колонке */
+}

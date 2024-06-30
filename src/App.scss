@@ -1,0 +1,72 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+	--index: calc(1vw + 1vh);
+}
+
+
+body {
+  display: block;
+  background: #1C1632; 
+  font-family: Arial, sans-serif; 
+}
+
+.App{
+  min-height: 100%;
+}
+
+.container {
+  //display: grid;
+  //grid-template-rows: auto 1fr auto;
+  //grid-template-columns: 1fr 4fr;
+  //grid-template-areas:
+  //      "header header"
+  //      "aside main"
+  //      "footer footer";
+  //height: 99vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* три строки */
+  grid-template-columns: auto; /* одна колонка */
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  height: 99vh;
+}
+
+.header {
+  //text-align: center;
+  //padding: .7em;
+  grid-area: header;
+  //background-color: #f8f9fa;
+  padding: 1rem;
+  text-align: center;
+}
+
+.middleSection{
+  display: flex;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #33333334;
+  color: white;
+  text-align: center;
+  padding: 5px 0;
+  grid-area: footer;
+}
+
+.navigation{
+  width: 20%;
+}
+
+.main{
+  //width: 80%;
+}

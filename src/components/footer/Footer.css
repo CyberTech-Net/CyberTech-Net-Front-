@@ -1,5 +1,0 @@
-@import "../../App.css";
-
-.footer{
-    font-size: calc(var(--index) * .7);
-}

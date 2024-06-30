@@ -1,0 +1,24 @@
+//@import "../../App.css";
+
+.navigation {
+  display: flex;
+  gap: 10px; /* Отступ между кнопками */
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+  //  grid-area: aside;
+  width: 100%;
+  }
+
+  .button {
+    background: transparent; 
+    color: white;
+    border: none;
+    padding: 1em 2em 0.5em;
+    font-size: calc(var(--index) * .5);
+    border-bottom: solid #c2440a;
+  }
+
+  .button.active {
+    border-bottom: solid wheat;
+  }

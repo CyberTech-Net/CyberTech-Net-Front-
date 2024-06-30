@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+body {
+  background: linear-gradient(to bottom, #6c3074, #4a148c); /* Фиолетовый градиент от #6c3074 до #4a148c */
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* Занимает 100% высоты видимой области страницы */
+  font-family: Arial, sans-serif; /* Пример шрифта для текста на странице */
+  color: #ffffff; /* Белый цвет текста */
+}
