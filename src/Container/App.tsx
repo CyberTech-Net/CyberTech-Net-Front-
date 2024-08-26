@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CountryPage, HomePage, InfoPage, LoginPage,  NotFoundPage, RegisterPage } from '../Pages';
+import { CountryPage, GameTypePage, HomePage, InfoPage, LoginPage,  NotFoundPage, RegisterPage } from '../Pages';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Storage/Redux/store';
@@ -9,6 +9,7 @@ import '../dark-theme.css';
 import userModel from '../Interfaces/userModel';
 import { HeaderMenu, Footer } from '../Layout';
 import PlayerPage from '../Pages/handbooks/PlayerPage';
+import TeamPage from '../Pages/handbooks/TeamPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +33,8 @@ function App() {
             <Route path='/' element={<HomePage />}> </Route>
             <Route path='/countries' element={<CountryPage />}> </Route>
             <Route path='/players' element={<PlayerPage />}> </Route>
+            <Route path='/teams' element={<TeamPage />}> </Route>
+            <Route path='/gametypes' element={<GameTypePage />}> </Route>
             <Route path='/info' element={<InfoPage />}> </Route>
             <Route path='/login' element={<LoginPage />}></Route>
             <Route path='/register' element={<RegisterPage />}></Route>

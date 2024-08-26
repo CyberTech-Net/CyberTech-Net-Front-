@@ -12,7 +12,8 @@ import { toast } from 'react-toastify';
 import { ButtonGroup } from 'react-bootstrap';
 import { useGetCountriesQuery } from '../../Api/countryApi';
 import countryModel from '../../Interfaces/countryModel';
-import { text } from 'stream/consumers';
+import { dateformat } from '../../Utility/SD';
+import dayjs from 'dayjs';
 
 const PlayerPage: React.FC = () => {
   const [form] = Form.useForm<PlayerModel>();
@@ -24,24 +25,8 @@ const PlayerPage: React.FC = () => {
   const [createPlayer] = useCreatePlayerMutation();
   const [updatePlayer] = useUpdatePlayerMutation();
   const { data, isLoading, refetch } = useGetPlayersQuery(null);
-  const { data: dataCountry, isLoading: isLoadingCountry, refetch: refetchCountry } = useGetCountriesQuery(null);
-  const [countryId, setCountryId] = useState<string | null>(null);
- 
-// for img
-  const [imageId, setImageId] = useState<string | null>(null);
+  const { data: dataCountry } = useGetCountriesQuery(null);
 
-  const handleImageIdChange = (id: string | null) => {
-    setImageId(id);
-    form.setFieldsValue({ imageId: id || undefined }); // Convert null to undefined
-    console.log('Image ID in parent component:', id);
-  };
-
-  const handleCountryIdChange = (id: string | null) => {
-    setCountryId(id);
-    form.setFieldsValue({ country: data.find((s: { id: string | null; })=>s.id === id)});
-    console.log('Country ID in parent component:', id);
-  };
-  
   const handlePlayerDelete = async (id: string) => {
     toast.promise(
       deletePlayer(id),
@@ -56,15 +41,18 @@ const PlayerPage: React.FC = () => {
     );
   };
 
-  const showModal = (item: PlayerModel | null ) => {
-    
-    setEditingItem(item);
-    form.setFieldsValue(item || {});
-    setCountryId(item ?  item.country.id : "");
-    setImageId(item ?  item.imageId:"" );
+  const handleImageIdChange = (id: string | null) => {
+    form.setFieldsValue({ imageId: id || undefined }); // Convert null to undefined
+    console.log('Image ID in parent component:', id);
+  };
 
-    setIsModalVisible(true);
-    
+  const showModal = (item: PlayerModel | null ) => {
+    setEditingItem(item);
+    const itemNew = {...item, countryId: item?.country.id}
+    form.setFieldsValue(itemNew || {});
+    form.setFieldValue(["country"], itemNew.countryId);
+    form.setFieldValue(["birthDate"], dayjs(itemNew.birthDate).format("YYYY-MM-DD"))
+    setIsModalVisible(true);   
   };
 
   const handleCancel = () => {
@@ -75,12 +63,14 @@ const PlayerPage: React.FC = () => {
 
   const onFinish = async (values: PlayerModel) => {
     try {
+      const dataNew = {...values,  countryId: values.country}
       if (editingItem) {
-        await updatePlayer({ data: values, id: editingItem.id }).unwrap();
+        console.log(dataNew);
+        console.log(editingItem.id );
+        await updatePlayer({ data:dataNew, id: editingItem.id }).unwrap();
         toastNotify('Player updated successfully');    
       } else {
-        console.log(values);
-        await createPlayer(values).unwrap();
+        await createPlayer(dataNew).unwrap();
         toastNotify('Player created successfully');
       }
       setIsModalVisible(false);
@@ -116,6 +106,10 @@ const PlayerPage: React.FC = () => {
       title: 'birthDate',
       dataIndex: 'birthDate',
       key: 'birthDate',
+      render:(text:string)=>
+        {
+          return dayjs(text).format(dateformat)
+        }
     },
     {
       title: 'country',
@@ -180,11 +174,12 @@ const PlayerPage: React.FC = () => {
                 <Input />
               </Form.Item> 
               <Form.Item name="country" label="Country" rules={[{ required: true }]}>
-                <Select
-                  onChange={handleCountryIdChange}
-                  value = {countryId}
-                  placeholder="Страна">
-                    {dataCountry?.map((country: any)=> {return <Select.Option key ={country.id}>{country.titleCountry}</Select.Option>})}
+                <Select 
+                  placeholder="Select country">                
+                  {dataCountry?.map((country: countryModel) => (
+                  <Select.Option key={country.id} value={country.id}>
+                    {country.titleCountry}
+                  </Select.Option>))}
                 </Select>
               </Form.Item>
               <Form.Item name="birthDate" label="BirthDate" rules={[{ required: true }]}>
@@ -193,10 +188,7 @@ const PlayerPage: React.FC = () => {
               <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-
               <ImageUploader onImageIdChange={handleImageIdChange} />
-              {/* {imageId && <p>File ID: {imageId}</p>}    */}
-
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   {editingItem ? "Update" : "Create"}

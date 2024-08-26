@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const gameTypeApi = createApi({
     reducerPath: "gameTypeApi",
     baseQuery: fetchBaseQuery({
-      baseUrl: "http://localhost:7050/",
+      baseUrl: "http://localhost:7152/",
      // baseUrl: "http://asutp-web-001:7152/",
      prepareHeaders: (headers: Headers, api) => {
         const token = localStorage.getItem("token");
@@ -12,19 +12,19 @@ const gameTypeApi = createApi({
     }),
     tagTypes: ["GameTypes"],
     endpoints: (builder) => ({
-      getGameItems: builder.query({
+      getGameTypes: builder.query({
         query: () => ({
           url: "api/GameType",
         }),
         providesTags: ["GameTypes"],
       }),
-      getGameItemById: builder.query({
+      getGameTypeById: builder.query({
         query: (id) => ({
           url: `api/GameType/${id}`,
         }),
         providesTags: ["GameTypes"],
       }),
-      createGameItem: builder.mutation({
+      createGameType: builder.mutation({
         query: (data) => ({
           url: "api/GameType",
           method: "POST",
@@ -32,7 +32,7 @@ const gameTypeApi = createApi({
         }),
         invalidatesTags: ["GameTypes"],
       }),
-      updateGameItem: builder.mutation({
+      updateGameType: builder.mutation({
         query: ({ data, id }) => ({
           url: "api/GameType/" + id,
           method: "PUT",
@@ -40,7 +40,7 @@ const gameTypeApi = createApi({
         }),
         invalidatesTags: ["GameTypes"],
       }),
-      deleteGameItem: builder.mutation({
+      deleteGameType: builder.mutation({
         query: (id) => ({
           url: "api/GameType/" + id,
           method: "DELETE",
@@ -51,10 +51,10 @@ const gameTypeApi = createApi({
   });
   
   export const {
-    useGetGameItemsQuery,
-    useGetGameItemByIdQuery,
-    useCreateGameItemMutation,
-    useUpdateGameItemMutation,
-    useDeleteGameItemMutation,
+    useGetGameTypesQuery,
+    useGetGameTypeByIdQuery,
+    useCreateGameTypeMutation,
+    useUpdateGameTypeMutation,
+    useDeleteGameTypeMutation,
   } = gameTypeApi;
   export default gameTypeApi;

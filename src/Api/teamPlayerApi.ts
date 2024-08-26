@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const teamPlayerApi = createApi({
     reducerPath: "teamplayerApi",
     baseQuery: fetchBaseQuery({
-      baseUrl: "http://localhost:7050/",
+      baseUrl: "http://localhost:7152/",
      // baseUrl: "http://asutp-web-001:7152/",
      prepareHeaders: (headers: Headers, api) => {
         const token = localStorage.getItem("token");
@@ -12,7 +12,7 @@ const teamPlayerApi = createApi({
     }),
     tagTypes: ["TeamPlayer"],
     endpoints: (builder) => ({
-      getTeamPlayer: builder.query({
+      getTeamPlayers: builder.query({
         query: () => ({
           url: "api/TeamPlayer",
         }),
@@ -51,7 +51,7 @@ const teamPlayerApi = createApi({
   });
   
   export const {
-    useGetTeamPlayerQuery,
+    useGetTeamPlayersQuery,
     useGetTeamPlayerByIdQuery,
     useCreateTeamPlayerMutation,
     useUpdateTeamPlayerMutation,

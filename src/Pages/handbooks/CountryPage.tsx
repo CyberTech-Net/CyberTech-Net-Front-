@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Button, Image, Modal, Form, Input } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useGetCountriesQuery, useDeleteCountryMutation, useCreateCountryMutation, useUpdateCountryMutation} from '../../Api/countryApi';
+import { useGetCountriesQuery, useDeleteCountryMutation, useCreateCountryMutation, useUpdateCountryMutation } from '../../Api/countryApi';
 import CountryModel from '../../Interfaces/countryModel';
 import { MainLoader } from '../../Common';
 import { useDispatch } from 'react-redux';
@@ -15,22 +15,16 @@ const CountryPage: React.FC = () => {
   const [form] = Form.useForm<CountryModel>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<CountryModel | null>(null);
-
   const dispatch = useDispatch();
   const [deleteCountry] = useDeleteCountryMutation();
   const [createCountry] = useCreateCountryMutation();
   const [updateCountry] = useUpdateCountryMutation();
   const { data, isLoading, refetch } = useGetCountriesQuery(null);
 
-// for img
-  const [imageId, setImageId] = useState<string | null>(null);
-
   const handleImageIdChange = (id: string | null) => {
-    setImageId(id);
-    form.setFieldsValue({ imageId: id || undefined }); // Convert null to undefined
+    form.setFieldsValue({ imageId: id || undefined });
     console.log('Image ID in parent component:', id);
   };
-  //
 
   const handleCountryDelete = async (id: string) => {
     toast.promise(
@@ -46,32 +40,23 @@ const CountryPage: React.FC = () => {
     );
   };
 
-  const showModal = (item: CountryModel | null ) => {
-    
-    console.log("Editing record:");
-    console.log(item);
-    setImageId(item ?  item.imageId:"" );
-    console.log("Editing ImageId:");
-    console.log({imageId});
-
-
+  const showModal = (item: CountryModel | null) => {
     setEditingItem(item);
     form.setFieldsValue(item || {});
     setIsModalVisible(true);
-    
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
     form.resetFields();
-    setEditingItem(null);   
+    setEditingItem(null);
   };
 
   const onFinish = async (values: CountryModel) => {
     try {
       if (editingItem) {
         await updateCountry({ data: values, id: editingItem.id }).unwrap();
-        toastNotify('Country updated successfully');    
+        toastNotify('Country updated successfully');
       } else {
         console.log(values);
         await createCountry(values).unwrap();
@@ -83,15 +68,14 @@ const CountryPage: React.FC = () => {
       // Refresh the data
       const updatedData = await refetch();
       if (updatedData.data) {
-        dispatch(setCountry(updatedData.data));  
+        dispatch(setCountry(updatedData.data));
       }
     } catch (error) {
-      toastNotify('An error occurred',"error");
+      toastNotify('An error occurred', "error");
     }
   };
 
   const columns = [
-
     {
       title: 'Country',
       dataIndex: 'titleCountry',
@@ -101,10 +85,10 @@ const CountryPage: React.FC = () => {
       title: 'Image',
       dataIndex: 'imageId',
       key: 'imageId',
-      render: (imageId: string) => 
-      <Image src=
-          { imageId ? `http://localhost:7152/api/storage/${imageId}` : require("../../Assets/nocontent.png")} 
-          alt="no content" 
+      render: (imageId: string) =>
+        <Image src=
+          {imageId ? `http://localhost:7152/api/storage/${imageId}` : require("../../Assets/nocontent.png")}
+          alt="no content"
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
     {
@@ -112,10 +96,10 @@ const CountryPage: React.FC = () => {
       key: 'action',
       render: (_: any, record: CountryModel) => (
         <>
-        <ButtonGroup aria-label="Basic example">
-          <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => showModal(record)} />
-          <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} className="mx-2" onClick={() => handleCountryDelete(record.id)} />
-        </ButtonGroup>
+          <ButtonGroup aria-label="Basic example">
+            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => showModal(record)} />
+            <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} className="mx-2" onClick={() => handleCountryDelete(record.id)} />
+          </ButtonGroup>
         </>
       ),
     },
@@ -139,26 +123,22 @@ const CountryPage: React.FC = () => {
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
-            
           >
-          <Form<CountryModel> form={form} onFinish={onFinish} layout="vertical">
+            <Form<CountryModel> form={form} onFinish={onFinish} layout="vertical">
               <Form.Item name="titleCountry" label="Country" rules={[{ required: true }]}>
                 <Input />
-              </Form.Item> 
+              </Form.Item>
               <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-
               <ImageUploader onImageIdChange={handleImageIdChange} />
-              {/* {imageId && <p>File ID: {imageId}</p>}    */}
-
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   {editingItem ? "Update" : "Create"}
                 </Button>
               </Form.Item>
             </Form>
-          </Modal>   
+          </Modal>
         </div>
       )}
     </>

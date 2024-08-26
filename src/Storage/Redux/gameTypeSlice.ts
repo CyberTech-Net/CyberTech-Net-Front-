@@ -9,7 +9,7 @@ export const gameTypeSlice = createSlice({
   name: "GameType",
   initialState: initialState,
   reducers: {
-    setGameItem: (state, action) => {
+    setGameType: (state, action) => {
       state.gameItem = action.payload;
     },
     setSearchItem: (state, action) => {
@@ -18,5 +18,5 @@ export const gameTypeSlice = createSlice({
   },
 });
 
-export const { setGameItem, setSearchItem } = gameTypeSlice.actions;
+export const { setGameType, setSearchItem } = gameTypeSlice.actions;
 export const gameTypeReducer = gameTypeSlice.reducer;

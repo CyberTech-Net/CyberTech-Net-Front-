@@ -113,12 +113,13 @@ const Header = () => {
                   <Nav className="me-auto">
                 
                     <NavDropdown title='AdminPanel' id="basic-nav-dropdown" disabled={false}>
-                      <NavDropdown.Item className="App-link" href="/gameTypesPage">GameTypes</NavDropdown.Item>
+                      <NavDropdown.Item className="App-link" href="/gametypes">Gametypes</NavDropdown.Item>
                       <NavDropdown.Item className="App-link" href="/tournamentPage">Tournaments</NavDropdown.Item>
                       <NavDropdown.Item className="App-link" href="/countries">Countries</NavDropdown.Item>
                       <NavDropdown.Item className="App-link" href="/players">Players</NavDropdown.Item>
-                      <NavDropdown.Item className="App-link" href="/teamPage">Teams</NavDropdown.Item>
+                      <NavDropdown.Item className="App-link" href="/teams">Teams</NavDropdown.Item>
                       <NavDropdown.Item className="App-link" href="/info">Info</NavDropdown.Item>
+                      
                     </NavDropdown>
       
                     <Nav.Link className="App-link" href="/hooks">Хуки обычные</Nav.Link>

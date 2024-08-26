@@ -1,43 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Image, Modal, Form, Input, DatePicker, DatePickerProps } from 'antd';
+import React, { useState } from 'react';
+import { Table, Button, Image, Modal, Form, Input, Select } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useGetInfoQuery, useDeleteInfoMutation, useCreateInfoMutation, useUpdateInfoMutation } from '../../Api/infoApi';
-import InfoModel from '../../Interfaces/infoModel';
+import { useGetGameTypesQuery, useDeleteGameTypeMutation, useCreateGameTypeMutation, useUpdateGameTypeMutation } from '../../Api/gameTypeApi';
+import GameTypeModel from '../../Interfaces/gameTypeModel';
 import { MainLoader } from '../../Common';
 import { useDispatch } from 'react-redux';
-import { setInfo } from '../../Storage/Redux/infoSlice';
+import { setGameType } from '../../Storage/Redux/gameTypeSlice';
 import ImageUploader from '../../Common/ImageUploader';
 import { toastNotify } from '../../Helper';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'react-bootstrap';
-import moment from 'moment';
-import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
-import { dateformat } from '../../Utility/SD';
+import { gameCategory } from '../../Utility/SD';
 
-
-const InfoPage: React.FC = () => {
-  const [form] = Form.useForm<InfoModel>();
+const GameTypePage: React.FC = () => {
+  const [form] = Form.useForm<GameTypeModel>();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [editingItem, setEditingItem] = useState<InfoModel | null>(null);
-
+  const [editingItem, setEditingItem] = useState<GameTypeModel | null>(null);
   const dispatch = useDispatch();
-  const [deleteInfo] = useDeleteInfoMutation();
-  const [createInfo] = useCreateInfoMutation();
-  const [updateInfo] = useUpdateInfoMutation();
-  const { data, isLoading, refetch } = useGetInfoQuery(null);
+  const [deleteGameType] = useDeleteGameTypeMutation();
+  const [createGameType] = useCreateGameTypeMutation();
+  const [updateGameType] = useUpdateGameTypeMutation();
+  const { data, isLoading, refetch } = useGetGameTypesQuery(null);
 
   const handleImageIdChange = (id: string | null) => {
-    form.setFieldsValue({ imageId: id || undefined }); // Convert null to undefined
+    form.setFieldsValue({ imageId: id || undefined });
     console.log('Image ID in parent component:', id);
   };
 
-  const handleInfoDelete = async (id: string) => {
+  const handleGameTypeDelete = async (id: string) => {
     toast.promise(
-      deleteInfo(id),
+      deleteGameType(id),
       {
         pending: 'Processing your request...',
-        success: 'Info has been deleted Successfully 👌',
+        success: 'GameType has been deleted Successfully 👌',
         error: 'Error encountered 🤯',
       },
       {
@@ -46,10 +41,9 @@ const InfoPage: React.FC = () => {
     );
   };
 
-  const showModal = (item: InfoModel | null) => {
+  const showModal = (item: GameTypeModel | null) => {
     setEditingItem(item);
     form.setFieldsValue(item || {});
-    form.setFieldValue(["date"], dayjs(item?.date).format("YYYY-MM-DD"))
     setIsModalVisible(true);
   };
 
@@ -59,15 +53,15 @@ const InfoPage: React.FC = () => {
     setEditingItem(null);
   };
 
-  const onFinish = async (values: InfoModel) => {
+  const onFinish = async (values: GameTypeModel) => {
     try {
       if (editingItem) {
-        await updateInfo({ data: values, id: editingItem.id }).unwrap();
-        toastNotify('Info updated successfully');
+        await updateGameType({ data: values, id: editingItem.id }).unwrap();
+        toastNotify('GameType updated successfully');
       } else {
         console.log(values);
-        await createInfo(values).unwrap();
-        toastNotify('Info created successfully');
+        await createGameType(values).unwrap();
+        toastNotify('GameType created successfully');
       }
       setIsModalVisible(false);
       form.resetFields();
@@ -75,31 +69,28 @@ const InfoPage: React.FC = () => {
       // Refresh the data
       const updatedData = await refetch();
       if (updatedData.data) {
-        dispatch(setInfo(updatedData.data));
+        dispatch(setGameType(updatedData.data));
       }
     } catch (error) {
-      toastNotify('An error occurred:', "error");
+      toastNotify('An error occurred', "error");
     }
   };
 
-  const columns: ColumnsType<InfoModel> = [
+  const columns = [
     {
       title: 'Title',
-      dataIndex: 'title',
-      key: 'titleInfo',
+      dataIndex: 'titleGame',
+      key: 'titleGame',
     },
     {
-      title: 'Text',
-      dataIndex: 'text',
-      key: 'textInfo',
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
     },
     {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'dataInfo',
-      render: (text: string) => {
-        return dayjs(text).format(dateformat)
-      }
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: 'Image',
@@ -114,11 +105,11 @@ const InfoPage: React.FC = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (_: any, record: InfoModel) => (
+      render: (_: any, record: GameTypeModel) => (
         <>
           <ButtonGroup aria-label="Basic example">
             <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => showModal(record)} />
-            <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} className="mx-2" onClick={() => handleInfoDelete(record.id)} />
+            <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} className="mx-2" onClick={() => handleGameTypeDelete(record.id)} />
           </ButtonGroup>
         </>
       ),
@@ -132,27 +123,38 @@ const InfoPage: React.FC = () => {
       ) : (
         <div className="p-5">
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h1 className="text-success">List of News</h1>
+            <h1 className="text-success">List of GameTypes</h1>
             <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
-              Add Info
+              Add GameType
             </Button>
           </div>
           <Table dataSource={data} columns={columns} rowKey="id" />
           <Modal
-            title={editingItem ? "Edit info" : "Add new info"}
+            title={editingItem ? "Edit GameType" : "Add new GameType"}
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
           >
-            <Form<InfoModel> form={form} onFinish={onFinish} layout="vertical" >
-              <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+            <Form<GameTypeModel> form={form} onFinish={onFinish} layout="vertical">
+              <Form.Item name="titleGame" label="Title" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-              <Form.Item name="text" label="Text" rules={[{ required: true }]}>
-                <Input />
+
+              <Form.Item name="category" label="Category" rules={[{ required: true }]}>
+                <Select 
+                  placeholder="Select category"
+                >                
+                  {gameCategory?.map((Item) => 
+                  (
+                    <option key={Item} value={Item}>
+                      {Item}
+                      </option>
+                  ))}                
+                </Select>
               </Form.Item>
-              <Form.Item name="date" label="Date" rules={[{ required: true }]}>
-                <Input type='date' />
+
+              <Form.Item name="description" label="Description" rules={[{ required: true }]}>
+                <Input />
               </Form.Item>
               <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
                 <Input />
@@ -171,4 +173,4 @@ const InfoPage: React.FC = () => {
   );
 };
 
-export default InfoPage;
+export default GameTypePage;

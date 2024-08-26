@@ -1,4 +1,5 @@
 import CountryPage from "./handbooks/CountryPage";
+import GameTypePage from "./handbooks/GameTypePage";
 import InfoPage from "./handbooks/InfoPage";
 import PlayerPage from "./handbooks/PlayerPage";
 import HomePage from "./HomePage";
@@ -6,4 +7,4 @@ import NotFoundPage from "./NotFoundPage";
 import LoginPage from "./user/LoginPage";
 import RegisterPage from "./user/RegisterPage";
 
-export {HomePage, RegisterPage, LoginPage, NotFoundPage, CountryPage, InfoPage, PlayerPage};
+export {HomePage, RegisterPage, LoginPage, NotFoundPage, CountryPage, InfoPage, PlayerPage, GameTypePage};

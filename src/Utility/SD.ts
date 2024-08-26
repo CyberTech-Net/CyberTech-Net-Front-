@@ -3,7 +3,14 @@ export enum SD_Roles {
     CUSTOMER = "customer",
 }
 
-export const dateformat = 'DD.MM.YYYY'
+export const dateformat = 'DD.MM.YYYY';
 
+export const gameCategory = [
+    "Adventure",
+    "FPS",
+    "RPG",
+    "RTS",
+    "Sport",
+];
  
  
