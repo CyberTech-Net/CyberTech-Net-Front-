@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import Container from "react-bootstrap/Container";
-import { Image, MenuProps } from 'antd';
+import { Image, MenuProps, Badge } from 'antd';
 import { RootState } from "../Storage/Redux/store";
 import userModel from '../Interfaces/userModel';
 import { emptyUserState, setLoggedInUser } from '../Storage/Redux/userAuthSlice';
+import UserBadge from '../Helper/userBadge';
 
 let logo = require("../Assets/logo.png");
 type MenuItem = Required<MenuProps>['items'][number];
@@ -130,9 +131,8 @@ const Header = () => {
                 <Navbar.Collapse className="justify-content-end">
                   <Nav className="me-auto">
                     {userData.id && (
-                      <NavDropdown title={`Signed in as: ${userData.name}`} id="basic-nav-dropdown">
-                        <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-                      </NavDropdown>
+                        <UserBadge userData={userData} 
+                        handleLogout={handleLogout}   />
                     )}
                      {!userData.id && (
                       <>

@@ -5,7 +5,7 @@ import uploadResponseModel from '../Interfaces/uploadResponseModel';
 const fileApi = createApi({
   reducerPath: 'fileApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:7047/api/',
+    baseUrl: 'http://localhost:7152/api/',
     prepareHeaders: (headers: Headers) => {
       const token = localStorage.getItem("token");
       if (token) {
