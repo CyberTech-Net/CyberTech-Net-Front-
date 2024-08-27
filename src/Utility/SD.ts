@@ -4,6 +4,7 @@ export enum SD_Roles {
 }
 
 export const dateformat = 'DD.MM.YYYY';
+export const datetimeformat = 'DD.MM.YYYY HH:mm';
 
 export const gameCategory = [
     "Adventure",
@@ -11,6 +12,12 @@ export const gameCategory = [
     "RPG",
     "RTS",
     "Sport",
+];
+
+export const tournamentType = [
+    "местный",
+    "региональный",
+    "государственный"
 ];
  
  

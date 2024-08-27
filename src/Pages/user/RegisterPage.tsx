@@ -51,12 +51,12 @@ function RegisterPage() {
     return (
         <Container className="text-center">
         <Form method='POST' onSubmit={handleSubmit}>
-          <h1 className="mt-5">Register</h1>
+          <h1 className="mt-5">Регистрация</h1>
           <div className="mt-5">
           <Col sm={{ span: 6, offset: 3 }} xs={12} className="mt-4">
               <Form.Control 
                type="text" 
-               placeholder="Enter a e-mail" 
+               placeholder="Введите e-mail" 
                required 
                name="email"
                value = {userInput.email} 
@@ -66,7 +66,7 @@ function RegisterPage() {
             <Col sm={{ span: 6, offset: 3 }} xs={12} className="mt-4">
               <Form.Control 
                type="text" 
-               placeholder="Enter a name" 
+               placeholder="Введите имя" 
                required 
                name="name"
                value = {userInput.name} 
@@ -76,7 +76,7 @@ function RegisterPage() {
             <Col sm={{ span: 6, offset: 3 }} xs={12} className="mt-4">
               <Form.Control 
               type="text" 
-              placeholder="Enter phone"
+              placeholder="Введите телефон"
               required
               name="phoneNumber"
               value = {userInput.phoneNumber} 
@@ -85,8 +85,8 @@ function RegisterPage() {
              </Col>
             <Col sm={{ span: 6, offset: 3 }} xs={12} className="mt-4">
               <Form.Control 
-              type="text" 
-              placeholder="Enter password"
+              type="password" 
+              placeholder="Введите пароль"
               required
               name="password"
               value = {userInput.password} 
@@ -98,7 +98,7 @@ function RegisterPage() {
               name="role"
               value = {userInput.role} 
               onChange ={handleUserInput}>
-                <option value="">Select Role</option>
+                <option value="">Выберите роль</option>
                 <option value={`${SD_Roles.CUSTOMER}`}>Customer</option>
                 <option value={`${SD_Roles.ADMIN}`}>Admin</option>
               </Form.Select>

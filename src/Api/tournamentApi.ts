@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const tournamentApi = createApi({
     reducerPath: "tournamentApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:7050/",
+        baseUrl: "http://localhost:7152/",
      // baseUrl: "http://asutp-web-001:7152/",
      prepareHeaders: (headers: Headers, api) => {
         const token = localStorage.getItem("token");
@@ -12,7 +12,7 @@ const tournamentApi = createApi({
     }),
     tagTypes: ["Tournament"],
     endpoints: (builder) => ({
-        getTournament: builder.query({
+        getTournaments: builder.query({
             query: () => ({
               url: "api/Tournament",
             }),
@@ -51,7 +51,7 @@ const tournamentApi = createApi({
 });
 
 export const {
-    useGetTournamentQuery,
+    useGetTournamentsQuery,
     useGetTournamentByIdQuery,
     useCreateTournamentMutation,
     useUpdateTournamentMutation,

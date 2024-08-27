@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Image, Modal, Form, Input, Select } from 'antd';
+import { Table, Button, Image, Modal, Form, Input, Select, Row, Col } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useGetGameTypesQuery, useDeleteGameTypeMutation, useCreateGameTypeMutation, useUpdateGameTypeMutation } from '../../Api/gameTypeApi';
 import GameTypeModel from '../../Interfaces/gameTypeModel';
@@ -57,11 +57,11 @@ const GameTypePage: React.FC = () => {
     try {
       if (editingItem) {
         await updateGameType({ data: values, id: editingItem.id }).unwrap();
-        toastNotify('GameType updated successfully');
+        toastNotify('Record updated successfully');
       } else {
         console.log(values);
         await createGameType(values).unwrap();
-        toastNotify('GameType created successfully');
+        toastNotify('Record created successfully');
       }
       setIsModalVisible(false);
       form.resetFields();
@@ -78,22 +78,22 @@ const GameTypePage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Title',
+      title: 'Наименование',
       dataIndex: 'titleGame',
       key: 'titleGame',
     },
     {
-      title: 'Category',
+      title: 'Категория',
       dataIndex: 'category',
       key: 'category',
     },
     {
-      title: 'Description',
+      title: 'Описание',
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'Image',
+      title: 'Картинка',
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
@@ -103,7 +103,7 @@ const GameTypePage: React.FC = () => {
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
     {
-      title: 'Action',
+      title: '',
       key: 'action',
       render: (_: any, record: GameTypeModel) => (
         <>
@@ -122,41 +122,43 @@ const GameTypePage: React.FC = () => {
         <MainLoader />
       ) : (
         <div className="p-5">
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h1 className="text-success">List of GameTypes</h1>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
-              Add GameType
-            </Button>
-          </div>
-          <Table dataSource={data} columns={columns} rowKey="id" />
+          <Row>
+            <Col xs={24} md={{ span: 16, offset: 4 }}>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h1 className="text-success">Виды игр</h1>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
+                  Добавить
+                </Button>
+              </div>
+              <Table dataSource={data} columns={columns} rowKey="id" />
+            </Col>
+          </Row>
           <Modal
-            title={editingItem ? "Edit GameType" : "Add new GameType"}
+            title={editingItem ? "Изменение записи" : "Добавление записи"}
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
           >
             <Form<GameTypeModel> form={form} onFinish={onFinish} layout="vertical">
-              <Form.Item name="titleGame" label="Title" rules={[{ required: true }]}>
+              <Form.Item name="titleGame" label="Наименование" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-
-              <Form.Item name="category" label="Category" rules={[{ required: true }]}>
-                <Select 
-                  placeholder="Select category"
-                >                
-                  {gameCategory?.map((Item) => 
+              <Form.Item name="category" label="Категория" rules={[{ required: true }]}>
+                <Select
+                  placeholder="Выберите категорию"
+                >
+                  {gameCategory?.map((Item) =>
                   (
                     <option key={Item} value={Item}>
                       {Item}
-                      </option>
-                  ))}                
+                    </option>
+                  ))}
                 </Select>
               </Form.Item>
-
-              <Form.Item name="description" label="Description" rules={[{ required: true }]}>
+              <Form.Item name="description" label="Описание" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-              <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
+              <Form.Item name="imageId" label="Ссылка на картинку" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />

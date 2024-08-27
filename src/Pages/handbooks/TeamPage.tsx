@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Image, Modal, Form, Input } from 'antd';
+import { Table, Button, Image, Modal, Form, Input, Select, Row, Col } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useGetTeamsQuery, useDeleteTeamMutation, useCreateTeamMutation, useUpdateTeamMutation } from '../../Api/teamApi';
 import TeamModel from '../../Interfaces/teamModel';
@@ -14,6 +14,9 @@ import { ButtonGroup } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import { dateformat } from '../../Utility/SD';
 import { useCreateTeamPlayerMutation, useDeleteTeamPlayerMutation, useGetTeamPlayersQuery, useUpdateTeamPlayerMutation } from '../../Api/teamPlayerApi';
+import { setTeamPlayer } from '../../Storage/Redux/teamPlayerSlice';
+import { useGetPlayersQuery } from '../../Api/playerApi';
+import playerModel from '../../Interfaces/playerModel';
 
 const TeamPage: React.FC = () => {
   const [formTeam] = Form.useForm<TeamModel>();
@@ -29,8 +32,10 @@ const TeamPage: React.FC = () => {
   const [deleteTeamPlayer] = useDeleteTeamPlayerMutation();
   const [createTeamPlayer] = useCreateTeamPlayerMutation();
   const [updateTeamPlayer] = useUpdateTeamPlayerMutation();
-  const { data: dataTeamPlayer, isLoading: isLoadingTeamPlayer, refetch: refetchTeamPlayer  } = useGetTeamPlayersQuery(null);
+  const { data: dataTeamPlayer } = useGetTeamPlayersQuery(null);
   const { data, isLoading, refetch } = useGetTeamsQuery(null);
+  const { data: dataPlayer } = useGetPlayersQuery(null);
+  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
 
   const handleImageIdChange = (id: string | null) => {
     formTeam.setFieldsValue({ imageId: id || undefined });
@@ -72,11 +77,12 @@ const TeamPage: React.FC = () => {
     setIsModalTeamVisible(true);
   };
 
-  const showModalTeamPlayer = (item: TeamModel | null) => {
-    /*setEditingItemTeam(item);
-    formTeam.setFieldsValue(item || {});
-    formTeam.setFieldValue(["founded"], dayjs(item?.founded).format("YYYY-MM-DD"))
-    setIsModalTeamVisible(true);*/
+  const showModalTeamPlayer = (item: TeamPlayerModel | null) => {
+    setEditingItemTeamPlayer(item);
+    const itemNew = { ...item, playerId: item?.player.id }
+    formTeamPlayer.setFieldsValue(itemNew || {});
+    formTeamPlayer.setFieldValue(["player"], itemNew.playerId);
+    setIsModalTeamPlayerVisible(true);
   };
 
   const handleTeamCancel = () => {
@@ -85,15 +91,21 @@ const TeamPage: React.FC = () => {
     setEditingItemTeam(null);
   };
 
+  const handleTeamPlayerCancel = () => {
+    setIsModalTeamPlayerVisible(false);
+    formTeamPlayer.resetFields();
+    setEditingItemTeamPlayer(null);
+  };
+
   const onFinishTeam = async (values: TeamModel) => {
     try {
       if (editingItemTeam) {
         await updateTeam({ data: values, id: editingItemTeam.id }).unwrap();
-        toastNotify('Team updated successfully');
+        toastNotify('Record updated successfully');
       } else {
         console.log(values);
         await createTeam(values).unwrap();
-        toastNotify('Team created successfully');
+        toastNotify('Record created successfully');
       }
       setIsModalTeamVisible(false);
       formTeam.resetFields();
@@ -108,28 +120,47 @@ const TeamPage: React.FC = () => {
     }
   };
 
+  const onFinishTeamPlayer = async (values: TeamPlayerModel) => {
+    try {
+      const dataNew = { ...values, playerId: values.player, teamId: selectedTeamId }
+      console.log(dataNew);
+      if (editingItemTeamPlayer) {
+        await updateTeamPlayer({ data: dataNew, id: editingItemTeamPlayer.id }).unwrap();
+        toastNotify('Record updated successfully');
+      } else {
+        console.log(values);
+        await createTeamPlayer(dataNew).unwrap();
+        toastNotify('Record created successfully');
+      }
+      setIsModalTeamPlayerVisible(false);
+      formTeamPlayer.resetFields();
+      setEditingItemTeamPlayer(null);
+      // Refresh the data
+      const updatedData = await refetch();
+      if (updatedData.data) {
+        dispatch(setTeamPlayer(updatedData.data));
+      }
+    } catch (error) {
+      toastNotify('An error occurred', "error");
+    }
+  };
+
   const columns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Team',
+      title: 'Наименование',
       dataIndex: 'titleTeam',
       key: 'titleTeam',
     },
     {
-      title: 'Founded',
+      title: 'Дата образования',
       dataIndex: 'founded',
       key: 'founded',
-      render:(text:string)=>
-        {
-          return dayjs(text).format(dateformat)
-        }
+      render: (text: string) => {
+        return dayjs(text).format(dateformat)
+      }
     },
     {
-      title: 'Image',
+      title: 'Эмблема',
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
@@ -139,7 +170,7 @@ const TeamPage: React.FC = () => {
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
     {
-      title: 'Action',
+      title: '',
       key: 'action',
       render: (_: any, record: TeamModel) => (
         <>
@@ -152,50 +183,35 @@ const TeamPage: React.FC = () => {
     },
   ];
 
-  const expandedRowRender = () => {
-    const columns = [
-      {
-        title: 'TeamId',
-        dataIndex: 'TeamId',
-        key: 'TeamId',
-      },
-      {
-        title: 'Id',
-        dataIndex: 'id',
-        key: 'id',
-      },
-      {
-        title: 'Fio',
-        dataIndex: 'fio',
-        key: 'fio',
-      },
-      {
-        title: 'Year1',
-        dataIndex: 'year1',
-        key: 'year1',
-      },
-      {
-        title: 'Year2',
-        dataIndex: 'year2',
-        key: 'year2',
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        render: (_: any, record: TeamModel) => (
-          <>
-            <ButtonGroup aria-label="Basic example">
-              <Button type="primary" shape="circle" icon={<PlusOutlined />} className="mx-2" onClick={() => showModalTeamPlayer(null)} />
-              <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => showModalTeamPlayer(record)} />
-              <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} className="mx-2" onClick={() => handleTeamPlayerDelete(record.id)} />
-            </ButtonGroup>
-          </>
-        ),
-      },
-    ];
-    return <Table columns={columns} dataSource={dataTeamPlayer} pagination ={false} />;
-  }
-
+  const columnsRender = [
+    {
+      title: 'ФИО',
+      dataIndex: 'fio',
+      key: 'fio',
+    },
+    {
+      title: 'Год вступления',
+      dataIndex: 'year1',
+      key: 'year1',
+    },
+    {
+      title: 'Год выхода',
+      dataIndex: 'year2',
+      key: 'year2',
+    },
+    {
+      title: '',
+      key: 'action',
+      render: (_: any, record: TeamPlayerModel) => (
+        <>
+          <ButtonGroup aria-label="Basic example">
+            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => showModalTeamPlayer(record)} />
+            <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} className="mx-2" onClick={() => handleTeamPlayerDelete(record.id)} />
+          </ButtonGroup>
+        </>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -203,39 +219,105 @@ const TeamPage: React.FC = () => {
         <MainLoader />
       ) : (
         <div className="p-5">
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h1 className="text-success">List of Teams</h1>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalTeam(null)}>
-              Add Team
-            </Button>
-          </div>
-          <Table dataSource={data} columns={columns} rowKey="id" expandable={
-            {
-              expandedRowRender,
-              defaultExpandedRowKeys:['10'],
-            }
-          }
-          size="small" />
+          <Row>
+            <Col xs={24} md={{ span: 16, offset: 4 }}>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h1 className="text-success">Команды</h1>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalTeam(null)}>
+                  Добавить команду
+                </Button>
+              </div>
+              <Table dataSource={data} columns={columns} rowKey="id" expandable={
+                {
+                  rowExpandable: (record) => true,
+                  defaultExpandAllRows: false,
+                  defaultExpandedRowKeys: [],
+                  expandRowByClick: true,
+
+                  onExpandedRowsChange(expandedKeys) {
+                    // берем последний 
+                    setSelectedTeamId(expandedKeys[expandedKeys.length - 1]?.toString())
+
+                  },
+                  // раскрывается только 1 узел
+                  expandedRowKeys: [selectedTeamId],
+                  expandedRowRender: (record: TeamModel) => {
+                    return (
+                      <div style={{ paddingTop: "1em", height: "Auto" }}>
+                        <Row>
+                          <Col xs={24} md={{ span: 20, offset: 2}}>
+
+                            <div style={{ float: 'right' }}>
+                              <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalTeamPlayer(null)}>
+                                Добавить игрока
+                              </Button>
+                            </div>
+                            <Table
+                              rowKey="id"
+                              columns={columnsRender}
+                              dataSource={dataTeamPlayer.filter((item: { team: { id: string; }; }) => item.team.id === selectedTeamId)}
+                              pagination={false}
+                            />
+                          </Col>
+                        </Row>
+
+                      </div>)
+                  }
+                }
+              }
+                size="small" />
+            </Col>
+          </Row>
           <Modal
-            title={editingItemTeam ? "Edit Team" : "Add new Team"}
+            title={editingItemTeam ? "Изменение записи" : "Добавление записи"}
             open={isModalTeamVisible}
             onCancel={handleTeamCancel}
             footer={null}
           >
             <Form<TeamModel> form={formTeam} onFinish={onFinishTeam} layout="vertical">
-              <Form.Item name="titleTeam" label="Team" rules={[{ required: true }]}>
+              <Form.Item name="titleTeam" label="Наименование" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-              <Form.Item name="founded" label="Founded" rules={[{ required: true }]}>
+              <Form.Item name="founded" label="Дата образования" rules={[{ required: true }]}>
                 <Input type="date" />
               </Form.Item>
-              <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
+              <Form.Item name="imageId" label="Ссылка на эмблему" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   {editingItemTeam ? "Update" : "Create"}
+                </Button>
+              </Form.Item>
+            </Form>
+          </Modal>
+
+          <Modal
+            title={editingItemTeamPlayer ? "Изменение записи" : "Добавление записи"}
+            open={isModalTeamPlayerVisible}
+            onCancel={handleTeamPlayerCancel}
+            footer={null}
+          >
+            <Form<TeamPlayerModel> form={formTeamPlayer} onFinish={onFinishTeamPlayer} layout="vertical">
+              <Form.Item name="player" label="ФИО игрока" rules={[{ required: true }]}>
+                <Select
+                  placeholder="Select player">
+                  {dataPlayer?.map((player: playerModel) => (
+                    <Select.Option key={player.id} value={player.id}>
+                      {player.firstName + ' ' + player.secondName}
+                    </Select.Option>))}
+                </Select>
+              </Form.Item>
+              <Form.Item name="year1" label="Год вступления" rules={[{ required: true }]}>
+                <Input type="number"/>
+              </Form.Item>
+              <Form.Item name="year2" label="Год выхода">
+                <Input type="number"/>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  {editingItemTeamPlayer ? "Update" : "Create"}
                 </Button>
               </Form.Item>
             </Form>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Image, Modal, Form, Input } from 'antd';
+import { Table, Button, Image, Modal, Form, Input, Row, Col } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useGetCountriesQuery, useDeleteCountryMutation, useCreateCountryMutation, useUpdateCountryMutation } from '../../Api/countryApi';
 import CountryModel from '../../Interfaces/countryModel';
@@ -56,11 +56,11 @@ const CountryPage: React.FC = () => {
     try {
       if (editingItem) {
         await updateCountry({ data: values, id: editingItem.id }).unwrap();
-        toastNotify('Country updated successfully');
+        toastNotify('Record updated successfully');
       } else {
         console.log(values);
         await createCountry(values).unwrap();
-        toastNotify('Country created successfully');
+        toastNotify('Record created successfully');
       }
       setIsModalVisible(false);
       form.resetFields();
@@ -77,12 +77,12 @@ const CountryPage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Country',
+      title: 'Наименование',
       dataIndex: 'titleCountry',
       key: 'titleCountry',
     },
     {
-      title: 'Image',
+      title: 'Флаг',
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
@@ -92,7 +92,7 @@ const CountryPage: React.FC = () => {
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
     {
-      title: 'Action',
+      title: '',
       key: 'action',
       render: (_: any, record: CountryModel) => (
         <>
@@ -111,24 +111,30 @@ const CountryPage: React.FC = () => {
         <MainLoader />
       ) : (
         <div className="p-5">
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h1 className="text-success">List of Countries</h1>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
-              Add Country
-            </Button>
-          </div>
-          <Table dataSource={data} columns={columns} rowKey="id" />
+
+          <Row>
+            <Col xs={24} md={{ span: 16, offset: 4 }}>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h1 className="text-success">Страны</h1>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
+                  Добавить
+                </Button>
+              </div>
+              <Table dataSource={data} columns={columns} rowKey="id" />
+            </Col>
+          </Row>
+
           <Modal
-            title={editingItem ? "Edit country" : "Add new country"}
+            title={editingItem ? "Изменение записи" : "Добавление записи"}
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
           >
             <Form<CountryModel> form={form} onFinish={onFinish} layout="vertical">
-              <Form.Item name="titleCountry" label="Country" rules={[{ required: true }]}>
+              <Form.Item name="titleCountry" label="Наименование" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-              <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
+              <Form.Item name="imageId" label="Ссылка на картинку" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />

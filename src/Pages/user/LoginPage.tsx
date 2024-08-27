@@ -50,16 +50,16 @@ function LoginPage() {
       <Container className="text-center">
         {loading && <MainLoader/>}
         <Form method='POST' onSubmit={handleSubmit}>
-          <h1 className="mt-5">Login</h1>
+          <h1 className="mt-5">Авторизация</h1>
           <div className="mt-5">
             <Col sm={{ span: 6, offset: 3 }} xs={12} className="mt-4">
-              <Form.Control type="text" placeholder="Enter a e-mail" required
+              <Form.Control type="text" placeholder="Введите e-mail" required
               name = "email"
               value={userInput.email}
               onChange={handleUserInput} />
             </Col>
             <Col sm={{ span: 6, offset: 3 }} xs={12} className="mt-4">
-              <Form.Control type="text" placeholder="Enter password" required
+              <Form.Control type="password" placeholder="Введите password" required
                name = "password"
                value={userInput.password}
                onChange={handleUserInput}  />

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Image, Modal, Form, Input, DatePicker, DatePickerProps } from 'antd';
+import React, { useState } from 'react';
+import { Table, Button, Image, Modal, Form, Input, Col, Row } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useGetInfoQuery, useDeleteInfoMutation, useCreateInfoMutation, useUpdateInfoMutation } from '../../Api/infoApi';
 import InfoModel from '../../Interfaces/infoModel';
@@ -10,7 +10,6 @@ import ImageUploader from '../../Common/ImageUploader';
 import { toastNotify } from '../../Helper';
 import { toast } from 'react-toastify';
 import { ButtonGroup } from 'react-bootstrap';
-import moment from 'moment';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { dateformat } from '../../Utility/SD';
@@ -63,11 +62,11 @@ const InfoPage: React.FC = () => {
     try {
       if (editingItem) {
         await updateInfo({ data: values, id: editingItem.id }).unwrap();
-        toastNotify('Info updated successfully');
+        toastNotify('Record updated successfully');
       } else {
         console.log(values);
         await createInfo(values).unwrap();
-        toastNotify('Info created successfully');
+        toastNotify('Record created successfully');
       }
       setIsModalVisible(false);
       form.resetFields();
@@ -84,25 +83,25 @@ const InfoPage: React.FC = () => {
 
   const columns: ColumnsType<InfoModel> = [
     {
-      title: 'Title',
+      title: 'Заголовок',
       dataIndex: 'title',
       key: 'titleInfo',
     },
     {
-      title: 'Text',
+      title: 'Текст',
       dataIndex: 'text',
       key: 'textInfo',
     },
     {
-      title: 'Date',
+      title: 'Дата',
       dataIndex: 'date',
       key: 'dataInfo',
       render: (text: string) => {
-        return dayjs(text).format(dateformat)
+        return text ? dayjs(text).format(dateformat) : ""
       }
     },
     {
-      title: 'Image',
+      title: 'Картинка',
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
@@ -112,7 +111,7 @@ const InfoPage: React.FC = () => {
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
     {
-      title: 'Action',
+      title: '',
       key: 'action',
       render: (_: any, record: InfoModel) => (
         <>
@@ -131,30 +130,34 @@ const InfoPage: React.FC = () => {
         <MainLoader />
       ) : (
         <div className="p-5">
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h1 className="text-success">List of News</h1>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
-              Add Info
-            </Button>
-          </div>
-          <Table dataSource={data} columns={columns} rowKey="id" />
+          <Row>
+            <Col xs={24} md={{ span: 16, offset: 4 }}>
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <h1 className="text-success">Новости</h1>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
+                  Add Info
+                </Button>
+              </div>
+              <Table dataSource={data} columns={columns} rowKey="id" />
+            </Col>
+          </Row>
           <Modal
-            title={editingItem ? "Edit info" : "Add new info"}
+            title={editingItem ? "Изменение записи" : "Добавление записи"}
             open={isModalVisible}
             onCancel={handleCancel}
             footer={null}
           >
             <Form<InfoModel> form={form} onFinish={onFinish} layout="vertical" >
-              <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+              <Form.Item name="title" label="Заголовк" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-              <Form.Item name="text" label="Text" rules={[{ required: true }]}>
+              <Form.Item name="text" label="Текст" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
-              <Form.Item name="date" label="Date" rules={[{ required: true }]}>
+              <Form.Item name="date" label="Дата" rules={[{ required: true }]}>
                 <Input type='date' />
               </Form.Item>
-              <Form.Item name="imageId" label="Image ID" rules={[{ required: true }]}>
+              <Form.Item name="imageId" label="Ссылка на картинку" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />

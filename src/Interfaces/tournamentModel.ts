@@ -1,10 +1,12 @@
+import gameTypeModel from "./gameTypeModel";
+
 export default interface tournamentModel {
     id: string;
-    gameTypeId: string;
+    gameType: gameTypeModel;
     titleTournament: string;
     typeTournament: string;
-    dataTournamentInit: Date;
-    dataTournamentEnd: Date;
+    dateTournamentInit: string;
+    dateTournamentEnd: string;
     placeName: string;
     earndTournament: number;
 }

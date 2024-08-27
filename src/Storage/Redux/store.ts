@@ -16,18 +16,22 @@ import { teamReducer } from "./teamSlice";
 import { infoReducer } from "./infoSlice";
 import { teamPlayerReducer } from "./teamPlayerSlice";
 import teamPlayerApi from "../../Api/teamPlayerApi";
+import matchApi from "../../Api/matchApi";
+import { matchReducer } from "./matchSlice";
 
 
 const store = configureStore ({
     reducer:{
-        gameItemStore: gameTypeReducer,
+        gameTypeItemStore: gameTypeReducer,
         userAuthStore: userAuthReducer,
         countryItemStore: countryReducer,
         playerItemStore: playerReducer,
         tournamentItemStore: tournamentReducer,
         teamItemStore: teamReducer,
         infoItemStore: infoReducer,
-        teampleyerStore: teamPlayerReducer,
+        teampleyerItemStore: teamPlayerReducer,
+        matchItemStore: matchReducer,
+
         [authApi.reducerPath]: authApi.reducer,
         [fileApi.reducerPath]: fileApi.reducer,
         [gameTypeApi.reducerPath]: gameTypeApi.reducer,
@@ -36,7 +40,8 @@ const store = configureStore ({
         [tournamentApi.reducerPath]: tournamentApi.reducer,
         [teamApi.reducerPath]: teamApi.reducer,
         [infoApi.reducerPath]: infoApi.reducer,
-        [teamPlayerApi.reducerPath]: teamPlayerApi.reducer
+        [teamPlayerApi.reducerPath]: teamPlayerApi.reducer,
+        [matchApi.reducerPath]: matchApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -49,6 +54,7 @@ const store = configureStore ({
             .concat (teamApi.middleware)
             .concat (infoApi.middleware)
             .concat (teamPlayerApi.middleware)
+            .concat (matchApi.middleware)
            
 });
 
