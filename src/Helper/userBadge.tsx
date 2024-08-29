@@ -1,84 +1,82 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Badge, NavDropdown } from 'react-bootstrap';
-import { toast,Id  } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { signalRMessage, userModel } from '../Interfaces';
 import { closeConnection, getConnection } from '../Common/signalRConnection';
 import { HubConnection } from '@microsoft/signalr';
 
-
 interface UserBadgeProps {
-    userData: userModel;
-    handleLogout: () => void;
-  }
+  userData: userModel;
+  handleLogout: () => void;
+}
 
-  const UserBadge: React.FC<UserBadgeProps> = ({ userData, handleLogout }) => {
-    const [messages, setMessages] = useState<signalRMessage[]>([]);
-    const [connection, setConnection] = useState<HubConnection | null>(null);
-  
-    useEffect(() => {
-      let isMounted = true;
-  
-      const initConnection = async () => {
-        try {
-          const conn = await getConnection();
-          if (isMounted) {
-            setConnection(conn);
-  
-            conn.on("ReceiveMessage", (message: signalRMessage) => {
-              setMessages(prevMessages => [...prevMessages, message]);
-            });
-  
-            conn.on("ReceiveMultipleMessages", (newMessages: signalRMessage[]) => {
-              setMessages(prevMessages => [...prevMessages, ...newMessages]);
-            });
-          }
-        } catch (error) {
-          console.error('Failed to establish connection', error);
-        }
-      };
-  
-      initConnection();
-  
-      return () => {
-        isMounted = false;
-        closeConnection();
-      };
-    }, []);
-  
-    const handleBadgeClick = useCallback(async (event: React.MouseEvent<HTMLDivElement>): Promise<void> => {
-      event.stopPropagation();
-  
-      const promises = messages.map((message, index) => 
-        new Promise<void>((resolve) => {
-          toast.success(message.text, {
-            autoClose: 3000 + index * 500,
-            onClose: () => resolve()
+const UserBadge: React.FC<UserBadgeProps> = ({ userData, handleLogout }) => {
+  const [messages, setMessages] = useState<signalRMessage[]>([]);
+  const [visibleMessages, setVisibleMessages] = useState<number>(0);
+  const [connection, setConnection] = useState<HubConnection | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const initConnection = async () => {
+      try {
+        const conn = await getConnection();
+        if (isMounted) {
+          setConnection(conn);
+
+          conn.on("ReceiveMessage", (message: signalRMessage) => {
+            setMessages(prevMessages => [...prevMessages, message]);
+            setVisibleMessages(prev => prev + 1);
           });
-        })
-      );
-  
-      toast.promise(
-        Promise.all(promises).then(() => {
-          setMessages([]);
-        }),
-        {
-          pending: 'Загрузка...',
-          success: 'На сегодня все!',
-          error: 'Ошибка обработки сообщений',
+
+          conn.on("ReceiveMultipleMessages", (newMessages: signalRMessage[]) => {
+            setMessages(prevMessages => [...prevMessages, ...newMessages]);
+            setVisibleMessages(prev => prev + newMessages.length);
+          });
         }
-      );
-    }, [messages]);
-  
-    if (messages.length === 0) {
-      return (
-        <NavDropdown title={`Вход: ${userData.name}`} id="basic-nav-dropdown">
-          <NavDropdown.Item onClick={handleLogout}>Выйти</NavDropdown.Item>
-        </NavDropdown>
-      );
-    }
-  
-    return (
-      <div style={{ position: 'relative', display: 'inline-block' }}>
+      } catch (error) {
+        console.error('Failed to establish connection', error);
+      }
+    };
+
+    initConnection();
+
+    return () => {
+      isMounted = false;
+      closeConnection();
+    };
+  }, []);
+
+  const handleBadgeClick = useCallback(async (event: React.MouseEvent<HTMLDivElement>): Promise<void> => {
+    event.stopPropagation();
+
+    const promises = messages.map((message, index) => 
+      new Promise<void>((resolve) => {
+        toast.success(message.text, {
+          autoClose: 3000 + index * 500,
+          onClose: () => {
+            setVisibleMessages(prev => Math.max(0, prev - 1));
+            resolve();
+          }
+        });
+      })
+    );
+
+    toast.promise(
+      Promise.all(promises).then(() => {
+        setMessages([]);
+      }),
+      {
+        pending: 'Загрузка...',
+        success: 'На сегодня все!',
+        error: 'Ошибка обработки сообщений',
+      }
+    );
+  }, [messages]);
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      {visibleMessages > 0 && (
         <div 
           onClick={handleBadgeClick} 
           style={{ 
@@ -90,14 +88,18 @@ interface UserBadgeProps {
           }}
         >
           <Badge bg="success" pill>
-            {messages.length}
+            {visibleMessages}
           </Badge>
         </div>
-        <NavDropdown title={`Signed in as: ${userData.name}`} id="basic-nav-dropdown">
-          <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-        </NavDropdown>
-      </div>
-    );
-  };
-  
-  export default UserBadge;
+      )}
+      <NavDropdown 
+        title={`Вход: ${userData.name}`}
+        id="user-nav-dropdown"
+      >
+        <NavDropdown.Item onClick={handleLogout} className="text-light">Выйти</NavDropdown.Item>
+      </NavDropdown>
+    </div>
+  );
+};
+
+export default UserBadge;
