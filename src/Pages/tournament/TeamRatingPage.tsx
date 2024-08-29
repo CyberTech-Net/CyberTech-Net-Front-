@@ -51,7 +51,7 @@ const TeamRatingPage: React.FC = () => {
             key: 'matchCount',
         },
         {
-            title: 'Последняя игра',
+            title: 'Прошедшая игра',
             dataIndex: 'lastMatch',
             key: 'lastMatch',
             render: (text: string) => {

@@ -71,8 +71,8 @@ interface UserBadgeProps {
   
     if (messages.length === 0) {
       return (
-        <NavDropdown title={`Signed in as: ${userData.name}`} id="basic-nav-dropdown">
-          <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+        <NavDropdown title={`Вход: ${userData.name}`} id="basic-nav-dropdown">
+          <NavDropdown.Item onClick={handleLogout}>Выйти</NavDropdown.Item>
         </NavDropdown>
       );
     }

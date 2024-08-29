@@ -16,7 +16,7 @@ const MatchCardsPage: React.FC = () => {
             ) : (
                 <div className="p-5">
                     <Row>
-                        <Col xs={24} md={{ span: 14, offset: 4 }}>
+                        <Col xs={24} md={{ span: 18, offset: 3 }}>
                             <div className="d-flex align-items-center justify-content-between mb-4">
                                 <h1 className="text-success">Матчи</h1>
                             </div>
@@ -25,11 +25,12 @@ const MatchCardsPage: React.FC = () => {
                                     <Card
                                         hoverable={true}
                                         key={index}
-                                        style={{ width: 400 }}
+                                        style={{ width: 400, height: 450 }}
                                         actions={[
 
                                         ]}
                                         cover={
+                                            <Space  direction="horizontal" size="small">                                            
                                             <div
                                                 style={{
                                                     height: 100,
@@ -39,17 +40,20 @@ const MatchCardsPage: React.FC = () => {
                                                     fontSize: 20,
                                                     paddingTop: 10,
                                                     paddingLeft: 10,
+                                                    paddingRight: 50,
                                                     fontFamily: "revert",
                                                     display: "flex",
                                                     flexDirection: "row"
                                                 }}>
                                                 {cardItem.tournament.titleTournament}
-                                                <img src=
+                                                
+                                            </div>
+                                            <img src=
                                                     {cardItem.tournament.gameType.imageId ? `http://localhost:7152/api/storage/${cardItem.tournament.gameType.imageId}` : require("../../Assets/nocontent.png")}
                                                     alt="no content"
-                                                    style={{ width: '80%', maxWidth: '100px', paddingRight: 0, paddingTop: 0, float:"right"}}
+                                                    style={{ width: 50, paddingRight: 0, paddingTop: 0, position:"absolute", top:"0px",right:"0px"}}
                                                 />
-                                            </div>
+                                            </Space>
                                         }
                                     >
                                         <Meta
@@ -59,7 +63,8 @@ const MatchCardsPage: React.FC = () => {
                                                 marginTop: -30,
                                                 fontSize: 30,
                                                 color: "white",
-                                                background: "skyblue"
+                                                background: "skyblue",
+                                                height:50
                                             }}
                                             description={dayjs(cardItem.startDateTime).format(datetimeformat)}
                                         />
@@ -67,7 +72,8 @@ const MatchCardsPage: React.FC = () => {
                                             style={{
                                                 display: "flex",
                                                 flexDirection: "row",
-                                                background: "skyblue"
+                                                background: "skyblue",
+                                                height:300
                                                 //marginTop: -40
                                             }}
                                             title={
