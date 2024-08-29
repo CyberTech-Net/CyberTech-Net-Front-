@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CountryPage, GameTypePage, HomePage, InfoPage, LoginPage,  MatchCardsPage,  NotFoundPage, RegisterPage, TeamRatingPage, TournamentPage } from '../Pages';
+import { AboutPage, CountryPage, GameTypePage, HomePage, InfoPage, LoginPage,  MatchCardsPage,  NotFoundPage, RegisterPage, TeamRatingPage, TournamentPage } from '../Pages';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Storage/Redux/store';
@@ -39,6 +39,7 @@ function App() {
             <Route path='/info' element={<InfoPage />}> </Route>
             <Route path='/teamrating' element={<TeamRatingPage />}> </Route>
             <Route path='/matchcard' element={<MatchCardsPage />}> </Route>
+            <Route path='/about' element={<AboutPage />}> </Route>
             <Route path='/login' element={<LoginPage />}></Route>
             <Route path='/register' element={<RegisterPage />}></Route>
             <Route path='/logout' element = {<HomePage/>}> </Route>

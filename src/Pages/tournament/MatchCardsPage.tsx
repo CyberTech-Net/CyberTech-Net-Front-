@@ -90,7 +90,7 @@ const MatchCardsPage: React.FC = () => {
                                                                     <img src=
                                                                         {cardItem.firstTeam.imageId ? `http://localhost:7152/api/storage/${cardItem.firstTeam.imageId}` : require("../../Assets/nocontent.png")}
                                                                         alt="no content"
-                                                                        style={{ width: '100%', maxWidth: '120px', paddingRight: 20, paddingTop: 10, paddingBottom: 10 }}
+                                                                        style={{ width: 200, maxWidth: '120px', paddingRight: 20, paddingTop: 10, paddingBottom: 10 }}
                                                                     />
                                                                 </td>
                                                                 <td>
@@ -100,7 +100,7 @@ const MatchCardsPage: React.FC = () => {
                                                                     <img src=
                                                                         {cardItem.secondTeam.imageId ? `http://localhost:7152/api/storage/${cardItem.secondTeam.imageId}` : require("../../Assets/nocontent.png")}
                                                                         alt="no content"
-                                                                        style={{ width: '100%', maxWidth: '120px', paddingLeft: 20, paddingTop: 10, paddingBottom: 10 }}
+                                                                        style={{ width: 200, maxWidth: '120px', paddingLeft: 20, paddingTop: 10, paddingBottom: 10 }}
                                                                     />
                                                                 </td>
                                                             </tr>
@@ -120,11 +120,12 @@ const MatchCardsPage: React.FC = () => {
                                                                         {{
                                                                             borderWidth: 5,
                                                                             borderColor: cardItem.firstTeamResult === "Lose" ? "red" :
-                                                                            (cardItem.firstTeamResult === "Win" ? "green" : "transparent"),
+                                                                            (cardItem.firstTeamResult === "Win" ? "green" : "blue"),
                                                                             background: cardItem.firstTeamResult === "Lose" ? "pink" : 
                                                                             (cardItem.firstTeamResult === "Win" ? "lightgreen" : "transparent"),
                                                                             borderStyle: "double",
-                                                                            borderRadius: 5
+                                                                            borderRadius: 5,
+                                                                            height:45
                                                                         }}>
                                                                         {cardItem.firstTeamResult}
                                                                     </p>
@@ -135,11 +136,12 @@ const MatchCardsPage: React.FC = () => {
                                                                         {{
                                                                             borderWidth: 5,
                                                                             borderColor: cardItem.secondTeamResult === "Lose" ? "red" :
-                                                                            (cardItem.secondTeamResult === "Win" ? "green" : "transparent"),
+                                                                            (cardItem.secondTeamResult === "Win" ? "green" : "blue"),
                                                                             background: cardItem.secondTeamResult === "Lose" ? "pink" : 
                                                                             (cardItem.secondTeamResult === "Win" ? "lightgreen" : "transparent"),
                                                                             borderStyle: "double",
-                                                                            borderRadius: 5
+                                                                            borderRadius: 5,
+                                                                            height: 45
                                                                         }}>
                                                                         {cardItem.secondTeamResult}
                                                                     </p>
