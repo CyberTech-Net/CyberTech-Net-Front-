@@ -1,0 +1,39 @@
+body.dark-theme {
+    --body-background: #0c0b70;
+    --component-background: #1f1f1f;
+    --text-color: #f0f0f0;
+    --heading-color: #f0f0f0;
+    --border-color-base: #3c3c3c;
+    --table-header-bg: #2a2a2a;
+    --table-row-hover-bg: #2a2a2a;
+    --table-selected-row-color: #0f0e77;
+    --table-selected-row-bg: #2a2a2a;
+  }
+  
+  .dark-theme {
+    background-color: var(--body-background);
+    color: var(--text-color);
+  }
+  
+  .dark-theme h1,
+  .dark-theme h2,
+  .dark-theme h3,
+  .dark-theme h4,
+  .dark-theme h5,
+  .dark-theme h6 {
+    color: var(--heading-color);
+  }
+  
+  .dark-theme .ant-table-thead > tr > th {
+    background-color: var(--table-header-bg);
+    color: var(--text-color);
+  }
+  
+  .dark-theme .ant-table-tbody > tr.ant-table-row:hover > td {
+    background-color: var(--table-row-hover-bg);
+  }
+  
+  .dark-theme .ant-table-tbody > tr.ant-table-row-selected > td {
+    background-color: var(--table-selected-row-bg);
+    color: var(--table-selected-row-color);
+  }
