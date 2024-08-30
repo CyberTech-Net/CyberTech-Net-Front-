@@ -28,17 +28,24 @@ const PlayerPage: React.FC = () => {
   const { data: dataCountry } = useGetCountriesQuery(null);
 
   const handlePlayerDelete = async (id: string) => {
-    toast.promise(
-      deletePlayer(id),
-      {
-        pending: 'Processing your request...',
-        success: 'Player has been deleted Successfully 👌',
-        error: 'Error encountered 🤯',
-      },
-      {
-        theme: 'dark',
+    Modal.confirm({
+      title: "Подтверждаете удаление записи?",
+      okText: "Да",
+      cancelText: "Нет",
+      okType: "danger",
+      onOk: () => {
+        toast.promise(
+          deletePlayer(id),
+          {
+            pending: 'Processing your request...',
+            success: 'Player has been deleted Successfully 👌',
+            error: 'Error encountered 🤯',
+          },
+          {
+            theme: 'dark',
+          });
       }
-    );
+    })
   };
 
   const handleImageIdChange = (id: string | null) => {
@@ -88,22 +95,22 @@ const PlayerPage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Имя',
+      title: <div className="centered-header">Имя</div>,
       dataIndex: 'firstName',
       key: 'firstName',
     },
     {
-      title: 'Фамилия',
+      title: <div className="centered-header">Фамилия</div>,
       dataIndex: 'secondName',
       key: 'secondName',
     },
     {
-      title: 'Ник',
+      title: <div className="centered-header">Ник</div>,
       dataIndex: 'nickName',
       key: 'nickName',
     },
     {
-      title: 'Дата рождения',
+      title: <div className="centered-header">Дата рождения</div>,
       dataIndex: 'birthDate',
       key: 'birthDate',
       render: (text: string) => {
@@ -111,7 +118,7 @@ const PlayerPage: React.FC = () => {
       }
     },
     {
-      title: 'Страна',
+      title: <div className="centered-header">Страна</div>,
       dataIndex: 'country',
       key: 'country',
       render: (country: countryModel) => {
@@ -119,12 +126,12 @@ const PlayerPage: React.FC = () => {
       }
     },
     {
-      title: 'Фото',
+      title: <div className="centered-header">Фото</div>,
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
         <Image src=
-          {imageId ? `http://localhost:7152/api/storage/${imageId}` : require("../../Assets/nocontent.png")}
+          {`http://localhost:7152/api/storage/${imageId}`}
           alt="no content"
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
@@ -151,12 +158,12 @@ const PlayerPage: React.FC = () => {
           <Row>
             <Col xs={24} md={{ span: 16, offset: 4 }}>
               <div className="d-flex align-items-center justify-content-between mb-4">
-                <h1 className="text-success">Игроки</h1>
+                <h1 style={{ fontFamily: "cursive" }}>Игроки</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
                   Добавить
                 </Button>
               </div>
-              <Table dataSource={data} columns={columns} rowKey="id" />
+              <Table className="custom-table" dataSource={data} columns={columns} rowKey="id" />
             </Col>
           </Row>
           <Modal
@@ -167,13 +174,13 @@ const PlayerPage: React.FC = () => {
           >
             <Form<PlayerModel> form={form} onFinish={onFinish} layout="vertical">
               <Form.Item name="firstName" label="Имя" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <Form.Item name="secondName" label="Фамилия" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <Form.Item name="nickName" label="Ник" rules={[{ required: true }]}>
-                <Input maxLength={10}/>
+                <Input maxLength={10} />
               </Form.Item>
               <Form.Item name="country" label="Страна" rules={[{ required: true }]}>
                 <Select
@@ -188,7 +195,7 @@ const PlayerPage: React.FC = () => {
                 <Input type="date" />
               </Form.Item>
               <Form.Item name="imageId" label="Ссылка на фото" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />
               <Form.Item>

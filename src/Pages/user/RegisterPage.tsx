@@ -49,7 +49,7 @@ function RegisterPage() {
     };
 
     return (
-        <Container className="text-center">
+        <Container className="text-center" style={{paddingBottom:10}}>
         <Form method='POST' onSubmit={handleSubmit}>
           <h1 className="mt-5">Регистрация</h1>
           <div className="mt-5">
@@ -99,8 +99,8 @@ function RegisterPage() {
               value = {userInput.role} 
               onChange ={handleUserInput}>
                 <option value="">Выберите роль</option>
-                <option value={`${SD_Roles.CUSTOMER}`}>Customer</option>
-                <option value={`${SD_Roles.ADMIN}`}>Admin</option>
+                <option value={`${SD_Roles.CUSTOMER}`}>customer</option>
+                <option value={`${SD_Roles.ADMIN}`}>admin</option>
               </Form.Select>
             </Col>
           </div>

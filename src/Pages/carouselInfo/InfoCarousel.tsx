@@ -7,6 +7,8 @@ import { userModel } from "../../Interfaces";
 import infoModel from "../../Interfaces/infoModel";
 import { dateformat } from "../../Utility/SD";
 import dayjs from "dayjs";
+import { Content } from "antd/es/layout/layout";
+import { Container } from "react-bootstrap";
 
 const { Title, Paragraph } = Typography;
 
@@ -48,27 +50,27 @@ function InfoCarousel(props: Props) {
         alignContent: "justify",
         color: "white",
         textAlign: "justify",
+        fontFamily: "cursive",
         zIndex: 1
     };
 
     return (
-        <Carousel style={{backgroundColor: "#0f0e77", }} arrows infinite={false} autoplay>
+        <Carousel arrows infinite={false} autoplay>
             {props.infoItem.map((infoItem: infoModel, index: number) => (
                 <Row>
                     <Col xs={24} md={{ span: 16, offset: 4 }}>
                         <div key={index} >
                             <img height={400} style={imageStyle} alt="no context"
-                                src={infoItem.imageId ? `http://localhost:7152/api/storage/${infoItem.imageId}`
-                                    : require("../../Assets/nocontent.png")} />
-                            <Title level={1} style={{ fontSize: "4em", color: "lightgreen" }}>
+                                src={`http://localhost:7152/api/storage/${infoItem.imageId}`} />
+                            <Title level={1} style={{ fontSize: "4em", color: "lightgreen", fontFamily: "cursive" }}>
                                 {infoItem.title}
                             </Title>
                             <Paragraph style={textStyle}>
                                 {infoItem.text}
                             </Paragraph>
-                            <Paragraph style={{ fontSize: "1em", color: "lightblue", textAlign: "right",}}>
+                            <Paragraph style={{ fontSize: "1em", color: "blue", textAlign: "right", fontFamily: "cursive", paddingTop:20, fontWeight:"bold" }}>
                                 {dayjs(infoItem.date).format(dateformat)}
-                            </Paragraph>                       
+                            </Paragraph>
                         </div>
                     </Col>
                 </Row>

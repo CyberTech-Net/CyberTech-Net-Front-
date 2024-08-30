@@ -19,7 +19,6 @@ import teamModel from '../../Interfaces/teamModel';
 import gameTypeModel from '../../Interfaces/gameTypeModel';
 import { useGetGameTypesQuery } from '../../Api/gameTypeApi';
 
-
 const TournamentPage: React.FC = () => {
   const [formTournament] = Form.useForm<TournamentModel>();
   const [formMatch] = Form.useForm<MatchModel>();
@@ -41,31 +40,47 @@ const TournamentPage: React.FC = () => {
   const [selectedTournamentId, setSelectedTournamentId] = useState<string>("");
 
   const handleTournamentDelete = async (id: string) => {
-    toast.promise(
-      deleteTournament(id),
-      {
-        pending: 'Processing your request...',
-        success: 'Tournament has been deleted Successfully 👌',
-        error: 'Error encountered 🤯',
-      },
-      {
-        theme: 'dark',
+    Modal.confirm({
+      title: "Подтверждаете удаление записи?",
+      okText: "Да",
+      cancelText: "Нет",
+      okType: "danger",
+      onOk: () => {
+        toast.promise(
+          deleteTournament(id),
+          {
+            pending: 'Processing your request...',
+            success: 'Tournament has been deleted Successfully 👌',
+            error: 'Error encountered 🤯',
+          },
+          {
+            theme: 'dark',
+          }
+        );
       }
-    );
+    })
   };
 
   const handleMatchDelete = async (id: string) => {
-    toast.promise(
-      deleteMatch(id),
-      {
-        pending: 'Processing your request...',
-        success: 'Match has been deleted Successfully 👌',
-        error: 'Error encountered 🤯',
-      },
-      {
-        theme: 'dark',
+    Modal.confirm({
+      title: "Подтверждаете удаление записи?",
+      okText: "Да",
+      cancelText: "Нет",
+      okType: "danger",
+      onOk: () => {
+        toast.promise(
+          deleteMatch(id),
+          {
+            pending: 'Processing your request...',
+            success: 'Match has been deleted Successfully 👌',
+            error: 'Error encountered 🤯',
+          },
+          {
+            theme: 'dark',
+          }
+        );
       }
-    );
+    })
   };
 
   const showModalTournament = (item: TournamentModel | null) => {
@@ -84,7 +99,7 @@ const TournamentPage: React.FC = () => {
     formMatch.setFieldsValue(itemNew || {});
     formMatch.setFieldValue(["firstTeam"], itemNew.firstTeamId);
     formMatch.setFieldValue(["secondTeam"], itemNew.secondTeamId);
-    formMatch.setFieldValue(["startDateTime"], dayjs(itemNew.startDateTime).format("YYYY-MM-DD hh:mm"))
+    formMatch.setFieldValue(["startDateTime"], dayjs(itemNew.startDateTime).format("YYYY-MM-DD HH:mm"))
     setIsModalMatchVisible(true);
   };
 
@@ -151,12 +166,12 @@ const TournamentPage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Наименование',
+      title: <div className="centered-header">Наименование</div>,
       dataIndex: 'titleTournament',
       key: 'titleTournament',
     },
     {
-      title: 'Вид игры',
+      title: <div className="centered-header">Вид игры</div>,
       dataIndex: 'gameType',
       key: 'gameType',
       render: (gameType: gameTypeModel) => {
@@ -164,12 +179,12 @@ const TournamentPage: React.FC = () => {
       }
     },
     {
-      title: 'Тип',
+      title: <div className="centered-header">Тип</div>,
       dataIndex: 'typeTournament',
       key: 'typeTournament',
     },
     {
-      title: 'Дата начала',
+      title: <div className="centered-header">Дата начала</div>,
       dataIndex: 'dateTournamentInit',
       key: 'dateTournamentInit',
       render: (text: string) => {
@@ -177,7 +192,7 @@ const TournamentPage: React.FC = () => {
       }
     },
     {
-      title: 'Дата окончания',
+      title: <div className="centered-header">Дата окончания</div>,
       dataIndex: 'dateTournamentEnd',
       key: 'dateTournamentEnd',
       render: (text: string) => {
@@ -185,16 +200,16 @@ const TournamentPage: React.FC = () => {
       }
     },
     {
-      title: 'Место проведения',
+      title: <div className="centered-header">Место проведения</div>,
       dataIndex: 'placeName',
       key: 'placeName',
     },
     {
-      title: 'Призовой фонд',
+      title: <div className="centered-header">Призовой фонд</div>,
       dataIndex: 'earndTournament',
       key: 'earndTournament',
       render: (text: string) => {
-        return text ? "$"+text : ""
+        return text ? "$" + text : ""
       }
     },
     {
@@ -213,7 +228,7 @@ const TournamentPage: React.FC = () => {
 
   const columnsRender = [
     {
-      title: 'Команда 1',
+      title: <div className="centered-header">Команда 1</div>,
       dataIndex: 'firstTeam',
       key: 'firstTeam',
       render: (firstTeam: teamModel) => {
@@ -221,7 +236,7 @@ const TournamentPage: React.FC = () => {
       }
     },
     {
-      title: 'Команда 2',
+      title: <div className="centered-header">Команда 2</div>,
       dataIndex: 'secondTeam',
       key: 'secondTeam',
       render: (secondTeam: teamModel) => {
@@ -229,7 +244,7 @@ const TournamentPage: React.FC = () => {
       }
     },
     {
-      title: 'Старт',
+      title: <div className="centered-header">Старт</div>,
       dataIndex: 'startDateTime',
       key: 'startDateTime',
       render: (text: string) => {
@@ -259,23 +274,21 @@ const TournamentPage: React.FC = () => {
           <Row>
             <Col xs={24} md={{ span: 16, offset: 4 }}>
               <div className="d-flex align-items-center justify-content-between mb-4">
-                <h1 className="text-success">Турниры и матчи</h1>
+                <h1 style={{ fontFamily: "cursive" }}>Турниры и матчи</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalTournament(null)}>
-                  Add Tournament
+                  Добавить турнир
                 </Button>
               </div>
-              <Table dataSource={data} columns={columns} rowKey="id" expandable={
+              <Table className="custom-table" dataSource={data} columns={columns} rowKey="id" expandable={
                 {
                   rowExpandable: (record) => true,
                   defaultExpandAllRows: false,
                   defaultExpandedRowKeys: [],
                   expandRowByClick: true,
-
                   onExpandedRowsChange(expandedKeys) {
                     console.log("expendedKeys:" + expandedKeys)
                     // берем последний 
                     setSelectedTournamentId(expandedKeys[expandedKeys.length - 1]?.toString())
-
                   },
                   // раскрывается только 1 узел
                   expandedRowKeys: [selectedTournamentId],
@@ -284,12 +297,12 @@ const TournamentPage: React.FC = () => {
                       <div style={{ paddingTop: "1em", height: "Auto" }}>
                         <Row>
                           <Col xs={24} md={{ span: 20, offset: 2 }}>
-                            <div style={{ float: 'right' }}>
+                            <div style={{ float: 'right', paddingBottom: 10 }}>
                               <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalMatch(null)}>
                                 Добавить матч
                               </Button>
                             </div>
-                            <Table
+                            <Table className="custom-table"
                               rowKey="id"
                               columns={columnsRender}
                               dataSource={dataMatch.filter((item: { tournament: { id: string; }; }) => item.tournament.id === selectedTournamentId)}
@@ -312,7 +325,7 @@ const TournamentPage: React.FC = () => {
           >
             <Form<TournamentModel> form={formTournament} onFinish={onFinishTournament} layout="vertical">
               <Form.Item name="titleTournament" label="Наименование турнира" rules={[{ required: true }]}>
-                <Input maxLength={150}/>
+                <Input maxLength={150} />
               </Form.Item>
               <Form.Item name="gameType" label="Вид игры" rules={[{ required: true }]}>
                 <Select
@@ -342,10 +355,10 @@ const TournamentPage: React.FC = () => {
                 <Input type="date" />
               </Form.Item>
               <Form.Item name="placeName" label="Место проведения" rules={[{ required: true }]}>
-                <Input maxLength={150}/>
+                <Input maxLength={150} />
               </Form.Item>
               <Form.Item name="earndTournament" label="Призовой фонд" rules={[{ required: true }]}>
-                <InputNumber prefix="$" style={{ width: '50%' }}/>
+                <InputNumber prefix="$" style={{ width: '50%' }} />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">

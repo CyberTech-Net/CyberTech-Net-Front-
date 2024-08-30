@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { AboutPage, CountryPage, GameTypePage, HomePage, InfoPage, LoginPage,  MatchCardsPage,  NotFoundPage, RegisterPage, TeamRatingPage, TournamentPage } from '../Pages';
+import { AboutPage, CountryPage, GameTypePage, HomePage, InfoPage, LoginPage, MatchCardsPage, NotFoundPage, RegisterPage, TeamRatingPage, TournamentPage } from '../Pages';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../Storage/Redux/store';
 import { setLoggedInUser } from "../Storage/Redux/userAuthSlice";
 import { jwtDecode } from "jwt-decode";
-import '../dark-theme.css';
 import userModel from '../Interfaces/userModel';
 import { HeaderMenu, Footer } from '../Layout';
 import PlayerPage from '../Pages/handbooks/PlayerPage';
 import TeamPage from '../Pages/handbooks/TeamPage';
-import React from 'react';
+import { Layout } from 'antd';
+import '../table.css';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,10 +25,11 @@ function App() {
     }
   }, []);
 
-  return ( 
-    <div>
-      <HeaderMenu />  
-          <> 
+  return (
+    <Layout style={{ backgroundColor: '#696969', fontFamily: "cursive", height: "100%" }}>
+      <div>
+        <HeaderMenu />
+        <>
           <Routes>
             <Route path='/' element={<HomePage />}> </Route>
             <Route path='/countries' element={<CountryPage />}> </Route>
@@ -42,12 +43,13 @@ function App() {
             <Route path='/about' element={<AboutPage />}> </Route>
             <Route path='/login' element={<LoginPage />}></Route>
             <Route path='/register' element={<RegisterPage />}></Route>
-            <Route path='/logout' element = {<HomePage/>}> </Route>
-            <Route path='*' element={<NotFoundPage/>}></Route>
-          </Routes>  
-          </>
-      <Footer /> 
-    </div>
+            <Route path='/logout' element={<HomePage />}> </Route>
+            <Route path='*' element={<NotFoundPage />}></Route>
+          </Routes>
+        </>
+        <Footer />
+      </div>
+    </Layout>
   );
 }
 

@@ -1,0 +1,22 @@
+/* table.css */
+.custom-table .ant-table-thead > tr > th {
+    background-color: #706b9b; /* Замените на нужный вам цвет */
+    color: rgb(245, 241, 241);
+    bottom: 0vmin; 
+}
+
+.custom-table .ant-table-tbody > tr:hover {
+    background-color: #5483ca; /* Цвет фона при наведении */
+}
+
+.custom-table .ant-table-tbody > tr > td {
+    background-color: #d2d3dd; /* Цвет фона ячеек */
+}
+
+.custom-table {
+    background-color: #706b9b;
+}
+
+.centered-header {
+    text-align: center;
+  }

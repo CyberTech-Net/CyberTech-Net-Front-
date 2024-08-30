@@ -43,31 +43,45 @@ const TeamPage: React.FC = () => {
   };
 
   const handleTeamDelete = async (id: string) => {
-    toast.promise(
-      deleteTeam(id),
-      {
-        pending: 'Processing your request...',
-        success: 'Team has been deleted Successfully 👌',
-        error: 'Error encountered 🤯',
-      },
-      {
-        theme: 'dark',
+    Modal.confirm({
+      title: "Подтверждаете удаление записи?",
+      okText: "Да",
+      cancelText: "Нет",
+      okType: "danger",
+      onOk: () => {
+        toast.promise(
+          deleteTeam(id),
+          {
+            pending: 'Processing your request...',
+            success: 'Team has been deleted Successfully 👌',
+            error: 'Error encountered 🤯',
+          },
+          {
+            theme: 'dark',
+          });
       }
-    );
+    })
   };
 
   const handleTeamPlayerDelete = async (id: string) => {
-    toast.promise(
-      deleteTeamPlayer(id),
-      {
-        pending: 'Processing your request...',
-        success: 'TeamPlayer has been deleted Successfully 👌',
-        error: 'Error encountered 🤯',
-      },
-      {
-        theme: 'dark',
+    Modal.confirm({
+      title: "Подтверждаете удаление записи?",
+      okText: "Да",
+      cancelText: "Нет",
+      okType: "danger",
+      onOk: () => {
+        toast.promise(
+          deleteTeamPlayer(id),
+          {
+            pending: 'Processing your request...',
+            success: 'TeamPlayer has been deleted Successfully 👌',
+            error: 'Error encountered 🤯',
+          },
+          {
+            theme: 'dark',
+          });
       }
-    );
+    })
   };
 
   const showModalTeam = (item: TeamModel | null) => {
@@ -122,7 +136,7 @@ const TeamPage: React.FC = () => {
 
   const onFinishTeamPlayer = async (values: TeamPlayerModel) => {
     try {
-      const dataNew = { ...values, playerId: values.player, teamId: selectedTeamId }
+      const dataNew = { ...values, playerId: values.player, teamId: selectedTeamId, year2: (values.year2 === undefined || values.year2 === null ? "" : values.year2) }
       console.log(dataNew);
       if (editingItemTeamPlayer) {
         await updateTeamPlayer({ data: dataNew, id: editingItemTeamPlayer.id }).unwrap();
@@ -147,12 +161,12 @@ const TeamPage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Наименование',
+      title: <div className="centered-header">Наименование</div>,
       dataIndex: 'titleTeam',
       key: 'titleTeam',
     },
     {
-      title: 'Дата образования',
+      title: <div className="centered-header">Дата образования</div>,
       dataIndex: 'founded',
       key: 'founded',
       render: (text: string) => {
@@ -160,12 +174,12 @@ const TeamPage: React.FC = () => {
       }
     },
     {
-      title: 'Эмблема',
+      title: <div className="centered-header">Эмблема</div>,
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
         <Image src=
-          {imageId ? `http://localhost:7152/api/storage/${imageId}` : require("../../Assets/nocontent.png")}
+          {`http://localhost:7152/api/storage/${imageId}`}
           alt="no content"
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
@@ -185,17 +199,17 @@ const TeamPage: React.FC = () => {
 
   const columnsRender = [
     {
-      title: 'ФИО',
+      title: <div className="centered-header">ФИО</div>,
       dataIndex: 'fio',
       key: 'fio',
     },
     {
-      title: 'Год вступления',
+      title: <div className="centered-header">Год вступления</div>,
       dataIndex: 'year1',
       key: 'year1',
     },
     {
-      title: 'Год выхода',
+      title: <div className="centered-header">Год выхода</div>,
       dataIndex: 'year2',
       key: 'year2',
     },
@@ -222,12 +236,12 @@ const TeamPage: React.FC = () => {
           <Row>
             <Col xs={24} md={{ span: 16, offset: 4 }}>
               <div className="d-flex align-items-center justify-content-between mb-4">
-                <h1 className="text-success">Команды</h1>
+                <h1 style={{ fontFamily: "cursive" }}>Команды</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalTeam(null)}>
                   Добавить команду
                 </Button>
               </div>
-              <Table dataSource={data} columns={columns} rowKey="id" expandable={
+              <Table className="custom-table" dataSource={data} columns={columns} rowKey="id" expandable={
                 {
                   rowExpandable: (record) => true,
                   defaultExpandAllRows: false,
@@ -243,13 +257,13 @@ const TeamPage: React.FC = () => {
                     return (
                       <div style={{ paddingTop: "1em", height: "Auto" }}>
                         <Row>
-                          <Col xs={24} md={{ span: 20, offset: 2}}>
-                            <div style={{ float: 'right' }}>
+                          <Col xs={24} md={{ span: 20, offset: 2 }}>
+                            <div style={{ float: 'right', paddingBottom: 10 }}>
                               <Button type="primary" icon={<PlusOutlined />} onClick={() => showModalTeamPlayer(null)}>
                                 Добавить игрока
                               </Button>
                             </div>
-                            <Table
+                            <Table className="custom-table"
                               rowKey="id"
                               columns={columnsRender}
                               dataSource={dataTeamPlayer.filter((item: { team: { id: string; }; }) => item.team.id === selectedTeamId)}
@@ -273,13 +287,13 @@ const TeamPage: React.FC = () => {
           >
             <Form<TeamModel> form={formTeam} onFinish={onFinishTeam} layout="vertical">
               <Form.Item name="titleTeam" label="Наименование" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <Form.Item name="founded" label="Дата образования" rules={[{ required: true }]}>
                 <Input type="date" />
               </Form.Item>
               <Form.Item name="imageId" label="Ссылка на эмблему" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />
               <Form.Item>
@@ -306,7 +320,7 @@ const TeamPage: React.FC = () => {
                 </Select>
               </Form.Item>
               <Form.Item name="year1" label="Год вступления" rules={[{ required: true }]}>
-                <Input type="number"/>
+                <Input type="number" />
               </Form.Item>
               <Form.Item name="year2" label="Год выхода">
                 <Input />

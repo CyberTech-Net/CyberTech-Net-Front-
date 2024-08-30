@@ -29,17 +29,24 @@ const GameTypePage: React.FC = () => {
   };
 
   const handleGameTypeDelete = async (id: string) => {
-    toast.promise(
-      deleteGameType(id),
-      {
-        pending: 'Processing your request...',
-        success: 'GameType has been deleted Successfully 👌',
-        error: 'Error encountered 🤯',
-      },
-      {
-        theme: 'dark',
+    Modal.confirm({
+      title: "Подтверждаете удаление записи?",
+      okText: "Да",
+      cancelText: "Нет",
+      okType: "danger",
+      onOk: () => {
+        toast.promise(
+          deleteGameType(id),
+          {
+            pending: 'Processing your request...',
+            success: 'GameType has been deleted Successfully 👌',
+            error: 'Error encountered 🤯',
+          },
+          {
+            theme: 'dark',
+          });
       }
-    );
+    })
   };
 
   const showModal = (item: GameTypeModel | null) => {
@@ -79,27 +86,27 @@ const GameTypePage: React.FC = () => {
 
   const columns = [
     {
-      title: 'Наименование',
+      title: <div className="centered-header">Наименование</div>,
       dataIndex: 'titleGame',
       key: 'titleGame',
     },
     {
-      title: 'Категория',
+      title: <div className="centered-header">Категория</div>,
       dataIndex: 'category',
       key: 'category',
     },
     {
-      title: 'Описание',
+      title: <div className="centered-header">Описание</div>,
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'Картинка',
+      title: <div className="centered-header">Картинка</div>,
       dataIndex: 'imageId',
       key: 'imageId',
       render: (imageId: string) =>
         <Image src=
-          {imageId ? `http://localhost:7152/api/storage/${imageId}` : require("../../Assets/nocontent.png")}
+          {`http://localhost:7152/api/storage/${imageId}`}
           alt="no content"
           style={{ width: '100%', maxWidth: '120px' }} />,
     },
@@ -126,12 +133,12 @@ const GameTypePage: React.FC = () => {
           <Row>
             <Col xs={24} md={{ span: 16, offset: 4 }}>
               <div className="d-flex align-items-center justify-content-between mb-4">
-                <h1 className="text-success">Виды игр</h1>
+                <h1 style={{ fontFamily: "cursive" }}>Виды игр</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)}>
                   Добавить
                 </Button>
               </div>
-              <Table dataSource={data} columns={columns} rowKey="id" />
+              <Table className="custom-table" dataSource={data} columns={columns} rowKey="id" />
             </Col>
           </Row>
           <Modal
@@ -142,7 +149,7 @@ const GameTypePage: React.FC = () => {
           >
             <Form<GameTypeModel> form={form} onFinish={onFinish} layout="vertical">
               <Form.Item name="titleGame" label="Наименование" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <Form.Item name="category" label="Категория" rules={[{ required: true }]}>
                 <Select
@@ -157,10 +164,10 @@ const GameTypePage: React.FC = () => {
                 </Select>
               </Form.Item>
               <Form.Item name="description" label="Описание" rules={[{ required: true }]}>
-                <TextArea rows={4} maxLength={500}/>
+                <TextArea rows={4} maxLength={500} />
               </Form.Item>
               <Form.Item name="imageId" label="Ссылка на картинку" rules={[{ required: true }]}>
-                <Input maxLength={50}/>
+                <Input maxLength={50} />
               </Form.Item>
               <ImageUploader onImageIdChange={handleImageIdChange} />
               <Form.Item>

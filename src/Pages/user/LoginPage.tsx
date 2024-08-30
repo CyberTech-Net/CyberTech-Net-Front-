@@ -47,7 +47,7 @@ function LoginPage() {
 
 
     return (
-      <Container className="text-center">
+      <Container className="text-center" style={{paddingBottom:10}}>
         {loading && <MainLoader/>}
         <Form method='POST' onSubmit={handleSubmit}>
           <h1 className="mt-5">Авторизация</h1>

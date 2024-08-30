@@ -15,7 +15,7 @@ const TeamRatingPage: React.FC = () => {
 
     const columns = [
         {
-            title: 'Команда',
+            title: <div className="centered-header">Команда</div>,
             dataIndex: 'teamNaim',
             key: 'teamNaim',
             render:
@@ -23,35 +23,35 @@ const TeamRatingPage: React.FC = () => {
                     return (
                         <Space size={20}>
                             <Image src=
-                                {record.imageId ? `http://localhost:7152/api/storage/${record.imageId}` : require("../../Assets/nocontent.png")}
+                                {`http://localhost:7152/api/storage/${record.imageId}`}
                                 alt="no content"
                                 style={{ width: '100%', maxWidth: '120px' }} />
-                            <p style={{ textAlign: "center" }}>{record.teamNaim}</p>
+                            <p style={{ textAlign: "center", marginTop:20  }}>{record.teamNaim}</p>
                         </Space>)
                 }
         },
         {
-            title: 'Очки',
+            title: <div className="centered-header">Очки</div>,
             dataIndex: 'score',
             key: 'score',
         },
         {
-            title: 'Кол-во побед',
+            title: <div className="centered-header">Кол-во побед</div>,
             dataIndex: 'winCount',
             key: 'winCount',
         },
         {
-            title: 'Кол-во поражений',
+            title: <div className="centered-header">Кол-во поражений</div>,
             dataIndex: 'loseCount',
             key: 'loseCount',
         },
         {
-            title: 'Всего матчей',
+            title: <div className="centered-header">Всего матчей</div>,
             dataIndex: 'matchCount',
             key: 'matchCount',
         },
         {
-            title: 'Прошедшая игра',
+            title: <div className="centered-header">Прошедшая игра</div>,
             dataIndex: 'lastMatch',
             key: 'lastMatch',
             render: (text: string) => {
@@ -59,7 +59,7 @@ const TeamRatingPage: React.FC = () => {
             }
         },
         {
-            title: 'Предстоящая игра',
+            title: <div className="centered-header">Предстоящая игра</div>,
             dataIndex: 'futureMatch',
             key: 'futureMatch',
             render: (text: string) => {
@@ -70,32 +70,31 @@ const TeamRatingPage: React.FC = () => {
 
     const columnsRender = [
         {
-            title: 'ФИО',
+            title: <div className="centered-header">ФИО</div>,
             dataIndex: 'fio',
             key: 'fio',
-            render: (_: any, record: teamPlayerModel) =>
-                {
-                    return (
-                        <Space size={10}>
-                <Image src=
-                    {record.player.imageId ? `http://localhost:7152/api/storage/${record.player.imageId}` : require("../../Assets/nocontent.png")}
-                    alt="no content"
-                    style={{ width: '100%', maxWidth: '120px' }} />
-                    <p style={{ textAlign: "center" }}>{record.fio}</p>
-                <Image src=
-                    {record.player.country.imageId ? `http://localhost:7152/api/storage/${record.player.country.imageId}` : require("../../Assets/nocontent.png")}
-                    alt="no content"
-                    style={{ width: '100%', maxWidth: '120px', marginTop:-25 }} />
-                    
-                </Space>)}
+            render: (_: any, record: teamPlayerModel) => {
+                return (
+                    <Space size={20}>
+                        <Image src=
+                            {`http://localhost:7152/api/storage/${record.player.imageId}`}
+                            alt="no content"
+                            style={{ width: '100%', maxWidth: '120px' }} />
+                        <p style={{ textAlign: "center", marginTop: 20 }}>{record.fio}</p>
+                        <Image src=
+                            {`http://localhost:7152/api/storage/${record.player.country.imageId}`}
+                            alt="no content"
+                            style={{ width: '100%', maxWidth: '120px' }} />
+                    </Space>)
+            }
         },
         {
-            title: 'Год вступления',
+            title: <div className="centered-header">Год вступления</div>,
             dataIndex: 'year1',
             key: 'year1',
         },
         {
-            title: 'Год выхода',
+            title: <div className="centered-header">Год выхода</div>,
             dataIndex: 'year2',
             key: 'year2',
         },
@@ -110,9 +109,9 @@ const TeamRatingPage: React.FC = () => {
                     <Row>
                         <Col xs={24} md={{ span: 16, offset: 4 }}>
                             <div className="d-flex align-items-center justify-content-between mb-4">
-                                <h1 className="text-success">Рейтинг команд</h1>
+                                <h1 style={{fontFamily:"cursive"}}>Рейтинг команд</h1>
                             </div>
-                            <Table dataSource={data} columns={columns} rowKey="id" expandable={
+                            <Table className="custom-table" dataSource={data} columns={columns} rowKey="id" expandable={
                                 {
                                     rowExpandable: (record) => true,
                                     defaultExpandAllRows: false,
@@ -127,10 +126,11 @@ const TeamRatingPage: React.FC = () => {
                                     expandedRowKeys: [selectedTeamId],
                                     expandedRowRender: (record: TeamRatingModel) => {
                                         return (
-                                            <div style={{ paddingTop: "1em", height: "Auto" }}>
+                                            <div style={{ paddingTop: "1em", paddingBottom: "1em" }}>
                                                 <Row>
-                                                    <Col xs={24} md={{ span: 20, offset: 2 }}>
-                                                        <Table
+                                                    <Col xs={24} md={{ span: 20, offset: 2}}>
+                                                        <Table 
+                                                            className="custom-table"
                                                             rowKey="id"
                                                             columns={columnsRender}
                                                             dataSource={dataTeamPlayer.filter((item: { team: { id: string; }; }) => item.team.id === selectedTeamId)}
